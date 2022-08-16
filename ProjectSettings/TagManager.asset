@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 3428618425
+    locked: 0
+  - name: Surface
+    uniqueID: 184795431
+    locked: 0
+  - name: Player
+    uniqueID: 2405882001
+    locked: 0
