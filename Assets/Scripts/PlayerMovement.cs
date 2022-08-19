@@ -110,4 +110,3 @@ public class PlayerMovement : MonoBehaviour
     }
 }
 
-// git commit -m "moving system with animation added"
