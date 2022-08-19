@@ -315,6 +315,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1226173970}
   - component: {fileID: 1226173971}
+  - component: {fileID: 1226173972}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -350,8 +351,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e32b933ba74762249b1f18d7870f7b0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 20
-  _nextMoveDelay: 1
+  _movementTime: 1.25
+  _moveAnimator: {fileID: 1465136126}
+  _trimStart: 0.2
+  _trimEnd: 0.1
+--- !u!58 &1226173972
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226173969}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.66
 --- !u!1 &1465136123
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,6 +381,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1465136124}
   - component: {fileID: 1465136125}
+  - component: {fileID: 1465136126}
   m_Layer: 0
   m_Name: PlayerThumb
   m_TagString: Untagged
@@ -425,14 +445,34 @@ SpriteRenderer:
   m_SortingLayerID: -1889085295
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 74d9212d3b8b5b1488456849f8036005, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8c506e6a3ea27ab46aa9fcd9f5663680, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.6, y: 1.4}
+  m_Size: {x: 2.4, y: 2.4}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1465136126
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465136123}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 06e7cd9225ab03f4091e31a73698ef51, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
