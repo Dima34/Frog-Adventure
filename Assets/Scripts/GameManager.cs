@@ -8,10 +8,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] int _startNumber = 0;
     [SerializeField] int _increment = 1;
     [SerializeField] int _iterationCount = 10;
+
+    [Header("Level Generation Settings")]
     [SerializeField] Transform _player;
     [SerializeField] Transform _startPrefab;
     [SerializeField] Transform _finishPrefab;
     [SerializeField] Transform _section;
+    [SerializeField] Transform _cell;
     
     [Tooltip("Space between start - jumprops, jumprops - jumprops, jumprops - finish")]
     [SerializeField] float _propGaps = 20;
@@ -34,7 +37,7 @@ public class GameManager : MonoBehaviour
         Vector2 levelDirection = (_startPrefab.localRotation * Vector2.up).normalized;
 
         // Check if playground already exist
-        GameObject playground = GameObject.Find("PlayGround");
+        GameObject playground = GameObject.Find("Playground");
 
         // If playground exist - delete it. That needs to spawn new one if you click a "Generate Level" button in inspector or start the level
         if(playground != null){
@@ -42,7 +45,7 @@ public class GameManager : MonoBehaviour
         }
 
         // Create&spawn a level parent container
-        GameObject levelContainer = new GameObject("PlayGround");
+        GameObject levelContainer = new GameObject("Playground");
         // levelContainer = Instantiate(levelContainer, _startPrefab.transform.position, _startPrefab.transform.localRotation);
         
         // Spawn and place start section
@@ -65,10 +68,11 @@ public class GameManager : MonoBehaviour
             // Set a ordinal number
             sectionScript.OrdinalNumber = i;
             // Trigger cell spawn
-            sectionScript.SpawnCells();
+            sectionScript.SpawnCells(Transform cell);
         }
 
-        Instantiate(_finishPrefab, (Vector2)startObject.transform.position + (levelDirection * _propGaps * 10), startObject.rotation);  
+        Transform finishObject = Instantiate(_finishPrefab, (Vector2)startObject.transform.position + (levelDirection * _propGaps * 10), startObject.rotation);  
+        finishObject.SetParent(levelContainer.transform, true);
     }
 
 }
