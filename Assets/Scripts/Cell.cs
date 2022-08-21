@@ -7,22 +7,15 @@ public class Cell : MonoBehaviour
 {
     [SerializeField] TMP_Text _numberText;
     
+    // Commented for development
+    // [HideInInspector]
     public int Number;
-    public bool IsNext;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     private void Awake() {
-        _numberText.text = Number.ToString();
+        SetNumber();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public void SetNumber(){
+        _numberText.text = Number.ToString();
     }
 }

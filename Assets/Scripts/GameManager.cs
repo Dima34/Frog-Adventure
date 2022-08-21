@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Game Settings")]
+    [Header("Level Settings")]
     [SerializeField] int _startNumber = 0;
     [SerializeField] int _increment = 1;
     [SerializeField] int _iterationCount = 10;
+    [SerializeField] LevelManager _levelManagerDataSO;
 
     [Header("Level Generation Settings")]
     [SerializeField] Transform _player;
@@ -19,18 +20,16 @@ public class GameManager : MonoBehaviour
     [Tooltip("Space between start - jumprops, jumprops - jumprops, jumprops - finish")]
     [SerializeField] float _propGaps = 20;
 
-    int nextNum;
     
     void Start()
     {
-        nextNum = _startNumber + _increment;
-
-        BuidLevel();
+        StartBuildSequence();
     }
 
-    void Update()
-    {
-        
+    public void StartBuildSequence(){
+        writeDataToSO();
+        initializeLevelManager();
+        BuidLevel();
     }
 
     public void BuidLevel(){
@@ -68,11 +67,20 @@ public class GameManager : MonoBehaviour
             // Set a ordinal number
             sectionScript.OrdinalNumber = i;
             // Trigger cell spawn
-            sectionScript.SpawnCells(Transform cell);
+            sectionScript.SpawnCells(_cell);
         }
 
         Transform finishObject = Instantiate(_finishPrefab, (Vector2)startObject.transform.position + (levelDirection * _propGaps * 10), startObject.rotation);  
         finishObject.SetParent(levelContainer.transform, true);
     }
 
+    void initializeLevelManager(){
+        _levelManagerDataSO.SetCurrentNumber(_startNumber + _increment);
+    }
+
+    void writeDataToSO(){
+        _levelManagerDataSO.SetIncrement(_increment);
+        _levelManagerDataSO.SetIterationCount(_iterationCount);
+        _levelManagerDataSO.SetStartNumber(_startNumber);
+    }
 }

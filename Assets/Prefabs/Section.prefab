@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cell: {fileID: 5219142901616382253, guid: 084cab433549f0042af155d841647801, type: 3}
-  _sizeMargin: 2
-  queueNumber: 0
+  _sideMarginSize: 3
+  _cellAmount: 3
+  _levelManagerDataSO: {fileID: 11400000, guid: 14d0bf25650f7e648ade89c5c3dc0859, type: 2}
+  OrdinalNumber: 0
