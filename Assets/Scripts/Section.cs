@@ -6,7 +6,7 @@ public class Section : MonoBehaviour
 {
     [SerializeField] float _sideMarginSize = 2f;
     [SerializeField] int _cellAmount = 3;
-    [SerializeField] LevelManager _levelManagerDataSO;
+    [SerializeField] GameManagerData _gameManagerDataSO;
 
     // Commented for development debug
     // [HideInInspector] 
@@ -16,8 +16,8 @@ public class Section : MonoBehaviour
     {
         if (_cellAmount < 1) _cellAmount = 1;
 
-        int startNumber = _levelManagerDataSO.StartNumber;
-        int increment = _levelManagerDataSO.Increment;
+        int startNumber = _gameManagerDataSO.StartNumber;
+        int increment = _gameManagerDataSO.Increment;
 
         // Find cell half size
         float cellHalfSize = cell.localScale.x / 2;

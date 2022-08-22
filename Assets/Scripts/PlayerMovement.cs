@@ -1,54 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.Animations;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] GameManagerData gameManagerDataSO;
     [SerializeField] float _movementTime = 1.25f;
     [Space(5)]
     [Header("Move animation  settings")]
     [SerializeField] Animator _moveAnimator;
-    [SerializeField] float _trimStart = 0.1f;
-    [SerializeField] float _trimEnd = 0.1f;
 
 
     Camera _mainCamera;
-
-    bool _isMoving;
-
     Vector3 _fromPos;
     Vector3 _toPos;
+    Collider2D _collidedObject;
 
-    float _animationLengthTime = 0.2f;
-    
-
+    bool _isMoving;
 
     private void Start()
     {
         _mainCamera = Camera.main;
-
-        // setAnimationSpeed();
     }
 
-    // Update is called once per frame
     void Update()
     {
         HandleMove();
-    }
-
-    void setAnimationSpeed(){
-        float croppedMovementTime = _movementTime - _trimStart - _trimEnd;
-
-        if(croppedMovementTime < 0 )
-            croppedMovementTime = 1;
-
-        float animationTimeMultiplier = croppedMovementTime / _animationLengthTime;
-        float summaryMultiplier = croppedMovementTime / animationTimeMultiplier;
-
-        Debug.Log("Anim time " + summaryMultiplier);
-
-        _moveAnimator.SetFloat("JumpSpeed", summaryMultiplier);
     }
 
     void HandleMove()
@@ -69,44 +46,83 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator moveSequence()
     {
         float t = 0;
-        
+
         startAnimationSequence();
 
         while (t < _movementTime)
         {
             t += Time.deltaTime;
-            transform.position = Vector3.Lerp(_fromPos, _toPos, easeInOut(t / _movementTime));
+            transform.position = Vector3.Lerp(_fromPos, _toPos, Utils.EaseInOut(t / _movementTime));
             yield return null;
         }
 
         _isMoving = false;
+        checkUnderFeet();
     }
-    void startAnimationSequence(){
+    void startAnimationSequence()
+    {
         StartCoroutine("handleAnimationTimeChange");
     }
 
-    IEnumerator handleAnimationTimeChange(){
+    IEnumerator handleAnimationTimeChange()
+    {
         _moveAnimator.SetBool("IsJumping", true);
-        
+
         float t = 0;
 
         while (t <= 1)
         {
             t += Time.deltaTime;
-            _moveAnimator.SetFloat("JumpTime", t);
+            _moveAnimator.SetFloat("JumpTime", Utils.EaseInCirc(t));
             yield return null;
         }
 
-        _moveAnimator.SetBool("IsJumping", false);        
+        _moveAnimator.SetBool("IsJumping", false);
     }
 
-    float easeInCirc(float x) {
-        return 1 - Mathf.Sqrt(1 - Mathf.Pow(x, 2));
-    }
-
-    float easeInOut(float x)
+    void checkUnderFeet()
     {
-        return x < 0.5 ? 16 * x * x * x * x * x : 1 - Mathf.Pow(-2 * x + 2, 5) / 2;
+        if (_collidedObject == null)
+            return;
+
+        switch (_collidedObject.tag)
+        {
+            case "Cell":
+                cellUnderFeet();
+                break;
+            case "Finsh":
+                Debug.Log("obj is cell");
+                break;
+            case "Start":
+                Debug.Log("this is still start");
+                break;
+        }
+    }
+
+    void cellUnderFeet()
+    {
+        Transform cellTransform = _collidedObject.transform;
+        int cellNumber = cellTransform.GetComponent<Cell>().Number;
+
+        if(cellNumber == gameManagerDataSO.CurrentNumber){
+            gameManagerDataSO.NextSectionNumber();
+        } else{
+            Debug.Log("Wrong cell number");
+        }
+    }
+
+    void restartLevel(){
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collidedObj)
+    {
+        _collidedObject = collidedObj;
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        _collidedObject = null;
     }
 }
 

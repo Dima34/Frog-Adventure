@@ -99,5 +99,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sideMarginSize: 3
   _cellAmount: 3
-  _levelManagerDataSO: {fileID: 11400000, guid: 14d0bf25650f7e648ade89c5c3dc0859, type: 2}
+  _gameManagerDataSO: {fileID: 11400000, guid: 14d0bf25650f7e648ade89c5c3dc0859, type: 2}
   OrdinalNumber: 0

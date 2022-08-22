@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] int _startNumber = 0;
     [SerializeField] int _increment = 1;
     [SerializeField] int _iterationCount = 10;
-    [SerializeField] LevelManager _levelManagerDataSO;
+    [SerializeField] GameManagerData _gameManagerDataSO;
 
     [Header("Level Generation Settings")]
     [SerializeField] Transform _player;
@@ -27,8 +27,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void StartBuildSequence(){
-        writeDataToSO();
-        initializeLevelManager();
+        initializeGameManager();
         BuidLevel();
     }
 
@@ -74,13 +73,13 @@ public class GameManager : MonoBehaviour
         finishObject.SetParent(levelContainer.transform, true);
     }
 
-    void initializeLevelManager(){
-        _levelManagerDataSO.SetCurrentNumber(_startNumber + _increment);
+    void initializeGameManager(){
+        _gameManagerDataSO.SetIncrement(_increment);
+        _gameManagerDataSO.SetIterationCount(_iterationCount);
+        _gameManagerDataSO.SetStartNumber(_startNumber);
+
+        // Set the first active number
+        _gameManagerDataSO.NextSectionNumber();
     }
 
-    void writeDataToSO(){
-        _levelManagerDataSO.SetIncrement(_increment);
-        _levelManagerDataSO.SetIterationCount(_iterationCount);
-        _levelManagerDataSO.SetStartNumber(_startNumber);
-    }
 }
