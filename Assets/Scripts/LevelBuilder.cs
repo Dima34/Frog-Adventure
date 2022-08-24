@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelBuilder : MonoBehaviour
+public class LevelBuilder
 {
     Transform parentObject;
     int startNumber;
@@ -40,7 +40,7 @@ public class LevelBuilder : MonoBehaviour
         Vector2 levelDirection = (parentObject.localRotation * Vector2.up).normalized;
 
         // Spawn and place start section
-        StartObject = Instantiate(startPrefab, parentObject.position, parentObject.localRotation);
+        StartObject = Object.Instantiate(startPrefab, parentObject.position, parentObject.localRotation);
         StartObject.SetParent(parentObject);
 
         for (int i = 1; i < iterationCount + 1; i++)
@@ -48,7 +48,7 @@ public class LevelBuilder : MonoBehaviour
             Vector3 newSectionPosiiton = (Vector2)StartObject.transform.position + (levelDirection * propGaps * i);
 
             // Spawn and place section in hierarchy 
-            Transform section = Instantiate(sectionPrefab, newSectionPosiiton, StartObject.rotation);
+            Transform section = Object.Instantiate(sectionPrefab, newSectionPosiiton, StartObject.rotation);
             section.SetParent(parentObject, true);
 
             Section sectionScript = section.GetComponent<Section>();
@@ -62,14 +62,14 @@ public class LevelBuilder : MonoBehaviour
                 section.gameObject.SetActive(false);
         }
 
-        Transform finishObject = Instantiate(finishPrefab, (Vector2)StartObject.transform.position + (levelDirection * propGaps * (iterationCount + 1)), StartObject.rotation);
+        Transform finishObject = Object.Instantiate(finishPrefab, (Vector2)StartObject.transform.position + (levelDirection * propGaps * (iterationCount + 1)), StartObject.rotation);
         finishObject.SetParent(parentObject, true);
     }
 
     public void CreatePlayer()
     {
         // Teleport player on start plate
-        PlayerObject = Instantiate(playerPrefab, StartObject.position, StartObject.rotation);
+        PlayerObject = Object.Instantiate(playerPrefab, StartObject.position, StartObject.rotation);
         PlayerObject.SetParent(parentObject);
     }
 }

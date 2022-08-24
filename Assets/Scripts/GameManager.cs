@@ -35,10 +35,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        BuidLevelSequence();
+        BuildLevelSequence();
     }
 
-    public void BuidLevelSequence(bool fromEditor = false)
+    public void BuildLevelSequence(bool fromEditor = false)
     {
         setLevelData();
         createLevel(fromEditor);
