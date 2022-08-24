@@ -1,85 +1,135 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Level Settings")]
-    [SerializeField] int _startNumber = 0;
-    [SerializeField] int _increment = 1;
-    [SerializeField] int _iterationCount = 10;
-    [SerializeField] GameManagerData _gameManagerDataSO;
+    public LevelData LevelDataSO;
 
-    [Header("Level Generation Settings")]
-    [SerializeField] Transform _player;
-    [SerializeField] Transform _startPrefab;
-    [SerializeField] Transform _finishPrefab;
-    [SerializeField] Transform _section;
-    [SerializeField] Transform _cell;
-    
-    [Tooltip("Space between start - jumprops, jumprops - jumprops, jumprops - finish")]
-    [SerializeField] float _propGaps = 20;
+    public int StartNumber { get => startNumber; }
+    public int Increment { get => increment; }
+    public int IterationCount { get => iterationCount; }
+    public Transform PlayerPrefab { get => playerPrefab; }
+    public Transform StartPrefab { get => startPrefab; }
+    public Transform FinishPrefab { get => finishPrefab; }
+    public Transform SectionPrefab { get => sectionPrefab; }
+    public Transform CellPrefab { get => cellPrefab; }
+    public float PropGaps { get => propGaps; }
+    public int CurrentNumber { get => currentNumber; }
+    [SerializeField] CameraMovement cameraObject;
 
-    
+    int startNumber;
+    int increment;
+    int iterationCount;
+    Transform playerPrefab;
+    Transform startPrefab;
+    Transform finishPrefab;
+    Transform sectionPrefab;
+    Transform cellPrefab;
+    float propGaps;
+
+    Transform startObject;
+    Transform finishObject;
+    Transform playerObject;
+
+    int currentNumber;
+
     void Start()
     {
-        StartBuildSequence();
+        BuidLevelSequence();
     }
 
-    public void StartBuildSequence(){
-        initializeGameManager();
-        BuidLevel();
+    void setCamera()
+    {
+        cameraObject.PlayerTransform = playerObject;
+        cameraObject.SetPosition();
     }
 
-    public void BuidLevel(){
-        Vector2 levelDirection = (_startPrefab.localRotation * Vector2.up).normalized;
+    public void BuidLevelSequence(bool fromEditor = false)
+    {
+        setLevelData();
+        createLevel(fromEditor);
+        // setCamera();
+    }
 
+    void setLevelData()
+    {
+        startNumber = LevelDataSO.StartNumber;
+        increment = LevelDataSO.Increment;
+        iterationCount = LevelDataSO.IterationCount;
+        playerPrefab = LevelDataSO.Player;
+        startPrefab = LevelDataSO.StartPrefab;
+        finishPrefab = LevelDataSO.FinishPrefab;
+        sectionPrefab = LevelDataSO.Section;
+        cellPrefab = LevelDataSO.Cell;
+        propGaps = LevelDataSO.PropGaps;
+    }
+
+    void createLevel(bool fromEditor)
+    {
         // Check if playground already exist
         GameObject playground = GameObject.Find("Playground");
 
         // If playground exist - delete it. That needs to spawn new one if you click a "Generate Level" button in inspector or start the level
-        if(playground != null){
+        if (playground != null)
             GameManager.DestroyImmediate(playground);
-        }
 
-        // Create&spawn a level parent container
+        // Spawn a level parent container (playground)
         GameObject levelContainer = new GameObject("Playground");
-        // levelContainer = Instantiate(levelContainer, _startPrefab.transform.position, _startPrefab.transform.localRotation);
-        
+
+        buidLevel(levelContainer.transform, fromEditor);
+        createPlayer(levelContainer.transform);
+    }
+
+    void buidLevel(Transform parentObject, bool fromEditor = false )
+    {
+        Vector2 levelDirection = (transform.localRotation * Vector2.up).normalized;
+
         // Spawn and place start section
-        Transform startObject = Instantiate(_startPrefab, transform.position, transform.localRotation);       
-        startObject.SetParent(levelContainer.transform);
+        startObject = Instantiate(startPrefab, transform.position, transform.localRotation);
+        startObject.SetParent(parentObject);
 
-        // Teleport player into start plate
-        _player.position = startObject.position;
-
-
-        for (int i = 1; i < _iterationCount + 1; i++)
+        for (int i = 1; i < iterationCount + 1; i++)
         {
-            Vector3 newSectionPosiiton = (Vector2)startObject.transform.position + (levelDirection * _propGaps * i);
+            Vector3 newSectionPosiiton = (Vector2)startObject.transform.position + (levelDirection * propGaps * i);
 
             // Spawn and place section in hierarchy 
-            Transform section = Instantiate(_section, newSectionPosiiton, startObject.rotation);
-            section.SetParent(levelContainer.transform, true);
+            Transform section = Instantiate(sectionPrefab, newSectionPosiiton, startObject.rotation);
+            section.SetParent(parentObject, true);
 
             Section sectionScript = section.GetComponent<Section>();
-            // Set a ordinal number
-            sectionScript.OrdinalNumber = i;
+            // Setup section
+            sectionScript.SetUp(this, i);
             // Trigger cell spawn
-            sectionScript.SpawnCells(_cell);
+            sectionScript.SpawnCells(cellPrefab);
+
+            if (!fromEditor)
+                // Disable section
+                section.gameObject.SetActive(false);
         }
 
-        Transform finishObject = Instantiate(_finishPrefab, (Vector2)startObject.transform.position + (levelDirection * _propGaps * 10), startObject.rotation);  
-        finishObject.SetParent(levelContainer.transform, true);
+        Transform finishObject = Instantiate(finishPrefab, (Vector2)startObject.transform.position + (levelDirection * propGaps * (iterationCount + 1)), startObject.rotation);
+        finishObject.SetParent(parentObject, true);
     }
 
-    void initializeGameManager(){
-        _gameManagerDataSO.SetIncrement(_increment);
-        _gameManagerDataSO.SetIterationCount(_iterationCount);
-        _gameManagerDataSO.SetStartNumber(_startNumber);
-
-        // Set the first active number
-        _gameManagerDataSO.NextSectionNumber();
+    void createPlayer(Transform parentObject)
+    {
+        // Teleport player on start plate
+        playerObject = Instantiate(playerPrefab, startObject.position, startPrefab.rotation);
+        playerObject.SetParent(parentObject);
     }
 
+    public void NextSectionNumber()
+    {
+        currentNumber += increment;
+        GlobalEventManager.OnCurrentNumberChange.Fire(currentNumber);
+        Debug.Log("Current number - " + currentNumber);
+    }
+
+    public void RestartLevel()
+    {
+        Scene activeScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(activeScene.buildIndex);
+    }
 }

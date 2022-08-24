@@ -6,18 +6,21 @@ public class Section : MonoBehaviour
 {
     [SerializeField] float _sideMarginSize = 2f;
     [SerializeField] int _cellAmount = 3;
-    [SerializeField] GameManagerData _gameManagerDataSO;
+    
+    GameManager gameManager;
+    int ordinalNumber;
 
-    // Commented for development debug
-    // [HideInInspector] 
-    public int OrdinalNumber;
+    public void SetUp(GameManager gameManager, int ordinalNumber){
+        this.gameManager = gameManager;
+        this.ordinalNumber = ordinalNumber;
+    }
 
     public void SpawnCells(Transform cell)
     {
         if (_cellAmount < 1) _cellAmount = 1;
 
-        int startNumber = _gameManagerDataSO.StartNumber;
-        int increment = _gameManagerDataSO.Increment;
+        int startNumber = gameManager.StartNumber;
+        int increment = gameManager.Increment;
 
         // Find cell half size
         float cellHalfSize = cell.localScale.x / 2;
@@ -35,7 +38,7 @@ public class Section : MonoBehaviour
         // Get correct cell posistion
         int correctCellPosition = getRandomCorrectCellNumber();
         // Calculate correct number value;
-        int correctNumber = startNumber + (increment * OrdinalNumber);
+        int correctNumber = startNumber + (increment * ordinalNumber);
 
         // Create exception array to prevent cell number repeating
         List<int> createdNumberArray = new List<int>(){correctNumber};
@@ -87,4 +90,5 @@ public class Section : MonoBehaviour
 
         return number;
     }
+
 }

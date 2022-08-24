@@ -4,20 +4,9 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] Transform _playerTransform;
+    public Transform PlayerTransform;
 
-    void Start()
-    {
-        setPosition();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        setPosition();
-    }
-
-    void setPosition(){
-        transform.position = new Vector3(_playerTransform.position.x, _playerTransform.position.y, -10);
+    public void SetPosition(){
+        transform.position = new Vector3(PlayerTransform.position.x, PlayerTransform.position.y, -10);
     }
 }

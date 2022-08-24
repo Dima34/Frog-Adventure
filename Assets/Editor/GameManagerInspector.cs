@@ -14,7 +14,7 @@ public class GameManagerInspector : Editor {
         base.OnInspectorGUI();
 
         if(GUILayout.Button("Generate Level")){
-            targetScript.StartBuildSequence();
+            targetScript.BuidLevelSequence(true);
         }
     }
 }

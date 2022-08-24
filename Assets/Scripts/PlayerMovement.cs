@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] GameManagerData gameManagerDataSO;
+    [SerializeField] GameManager _gameManager;
     [SerializeField] float _movementTime = 1.25f;
     [Space(5)]
     [Header("Move animation  settings")]
@@ -82,8 +82,10 @@ public class PlayerMovement : MonoBehaviour
 
     void checkUnderFeet()
     {
-        if (_collidedObject == null)
+        if (_collidedObject == null){
+            restartLevel();
             return;
+        }
 
         switch (_collidedObject.tag)
         {
@@ -104,15 +106,15 @@ public class PlayerMovement : MonoBehaviour
         Transform cellTransform = _collidedObject.transform;
         int cellNumber = cellTransform.GetComponent<Cell>().Number;
 
-        if(cellNumber == gameManagerDataSO.CurrentNumber){
-            gameManagerDataSO.NextSectionNumber();
-        } else{
-            Debug.Log("Wrong cell number");
-        }
+        // if(cellNumber == _gameManagerDataSO.CurrentNumber){
+        //     _gameManagerDataSO.NextSectionNumber();
+        // } else{
+        //     restartLevel();
+        // }
     }
 
     void restartLevel(){
-        
+        _gameManager.RestartLevel();      
     }
 
     private void OnTriggerEnter2D(Collider2D collidedObj)

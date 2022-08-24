@@ -16,7 +16,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6559451546653941113
 Transform:
@@ -99,5 +99,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sideMarginSize: 3
   _cellAmount: 3
-  _gameManagerDataSO: {fileID: 11400000, guid: 14d0bf25650f7e648ade89c5c3dc0859, type: 2}
+  _gameManager: {fileID: 7881933993445490937, guid: 411fd57b2dc64ae48aabac334a4c26d2, type: 3}
   OrdinalNumber: 0
