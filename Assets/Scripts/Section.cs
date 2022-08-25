@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class Section : MonoBehaviour
 {
+    public int OrdinalNumber { get => ordinalNumber;}
+    public int CorrectCellIndex { get => correctCellIndex; }
+    public List<Cell> CellsList { get => cellsList; }
+
     [SerializeField] float _sideMarginSize = 2f;
     [SerializeField] int _cellAmount = 3;
 
     int ordinalNumber;
     int startNumber;
     int increment;
-
-    public int OrdinalNumber { get => ordinalNumber;}
+    int correctCellIndex;
+    List<Cell> cellsList;
 
     public void SetUp(int startNumber, int increment, int ordinalNumber)
     {
@@ -20,12 +24,13 @@ public class Section : MonoBehaviour
         this.ordinalNumber = ordinalNumber;
     }
 
-    public void SpawnCells(Transform cell)
+    public void SpawnCells(Cell cell)
     {
         if (_cellAmount < 1) _cellAmount = 1;
+        cellsList = new List<Cell>();
 
         // Find cell half size
-        float cellHalfSize = cell.localScale.x / 2;
+        float cellHalfSize = cell.transform.localScale.x / 2;
         // Find one side margin which includes margins and cell half (because when we spawn we specify the center coords. We need that to create cells on side and don`t calculate the half + center coords each time)
         float sideMargin = cellHalfSize + _sideMarginSize;
         // Calculate section width includes margin
@@ -37,8 +42,8 @@ public class Section : MonoBehaviour
         // Get margin included left side coords
         Vector3 marginIncludedLeftPoint = transform.position + (localLeftVector * (includedSectionWidth / 2));
 
-        // Get correct cell posistion
-        int correctCellPosition = getRandomCorrectCellNumber();
+        // Get random correct cell posistion
+        correctCellIndex = Random.Range(0, _cellAmount);
         // Calculate correct number value;
         int correctNumber = startNumber + (increment * ordinalNumber);
 
@@ -50,47 +55,41 @@ public class Section : MonoBehaviour
         {
             Vector3 spawnPoint = marginIncludedLeftPoint + (-localLeftVector * i * cellGap);
 
-            Transform spawnedCell = Instantiate(cell, spawnPoint, transform.rotation);
-            spawnedCell.SetParent(transform);
+            GameObject spawnedCell = Instantiate(cell.gameObject, spawnPoint, transform.rotation);
+            spawnedCell.transform.SetParent(transform);
 
             int cellNumber;
 
             // (n-1) till (n+cellAmount) except of correct number 
-            if (correctCellPosition != i)
+            if (correctCellIndex != i)
             {
-                cellNumber = getRandomExcept(correctNumber - 1, correctNumber + _cellAmount, createdNumberArray);
+                cellNumber = Utils.GetRandomExceptNumList(correctNumber - 1, correctNumber + _cellAmount, createdNumberArray);
                 createdNumberArray.Add(cellNumber);
             }
             else
                 cellNumber = correctNumber;
 
-            setUpCell(spawnedCell, cellNumber);
+            Cell cellScript = spawnedCell.GetComponent<Cell>();
+
+            setUpCell(cellScript, cellNumber);
             createdNumberArray.Add(correctNumber);
+            cellsList.Add(cellScript);
         }
     }
 
-    void setUpCell(Transform cell, int number)
+    void setUpCell(Cell cell, int number)
     {
-        Cell cellScript = cell.GetComponent<Cell>();
-        cellScript.Number = number;
-        cellScript.SetNumber();
+        cell.Number = number;
+        cell.SetNumber();
     }
 
-    int getRandomCorrectCellNumber()
-    {
-        return Random.Range(0, _cellAmount);
-    }
-
-    int getRandomExcept(int min, int max, List<int> exceptNumberList)
-    {
-        int number;
-
-        do
+    public void LeaveCorrectCell(){
+        Debug.Log("leave correct cell");
+        for (int i = 0; i < cellsList.Count; i++)
         {
-            number = Random.Range(min, max);
-        } while (exceptNumberList.Contains(number));
-
-        return number;
+            if(i != correctCellIndex){
+                GameObject.Destroy(cellsList[i].gameObject);
+            }
+        }
     }
-
 }

@@ -30,7 +30,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void handleCameraPosition(){
-        Debug.Log("Handle");
         mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
     }
 

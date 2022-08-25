@@ -14,8 +14,8 @@ public class GameManager : MonoBehaviour
     public Transform PlayerPrefab { get => playerPrefab; }
     public Transform StartPrefab { get => startPrefab; }
     public Transform FinishPrefab { get => finishPrefab; }
-    public Transform SectionPrefab { get => sectionPrefab; }
-    public Transform CellPrefab { get => cellPrefab; }
+    public Section SectionPrefab { get => sectionPrefab; }
+    public Cell CellPrefab { get => cellPrefab; }
     public float PropGaps { get => propGaps; }
     public int CurrentNumber { get => currentNumber; }
 
@@ -26,8 +26,8 @@ public class GameManager : MonoBehaviour
     Transform playerPrefab;
     Transform startPrefab;
     Transform finishPrefab;
-    Transform sectionPrefab;
-    Transform cellPrefab;
+    Section sectionPrefab;
+    Cell cellPrefab;
     float propGaps;
     LevelBuilder levelBuilder;
 
@@ -76,6 +76,9 @@ public class GameManager : MonoBehaviour
 
     public void NextSectionNumber()
     {
+        if(currentNumber != 0)
+            levelBuilder.SpawnedSectionsList[currentNumber - 1].LeaveCorrectCell();
+
         iteration++;
         currentNumber += increment;
         GlobalEventManager.OnCurrentNumberChange.Fire(currentNumber);

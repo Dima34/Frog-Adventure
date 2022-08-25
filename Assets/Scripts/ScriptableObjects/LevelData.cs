@@ -8,7 +8,7 @@ public class LevelData : ScriptableObject {
     public Transform Player;
     public Transform StartPrefab;
     public Transform FinishPrefab;
-    public Transform Section;
-    public Transform Cell;
+    public Section Section;
+    public Cell Cell;
     public float PropGaps = 20;    
 }

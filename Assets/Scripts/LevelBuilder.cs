@@ -11,9 +11,9 @@ public class LevelBuilder
     Transform playerPrefab;
     Transform startPrefab;
     Transform finishPrefab;
-    Transform sectionPrefab;
+    Section sectionPrefab;
     List<Section> spawnedSectionsList;
-    Transform cellPrefab;
+    Cell cellPrefab;
     float propGaps;
 
     public Transform StartObject;
@@ -39,7 +39,7 @@ public class LevelBuilder
     
     public void BuidLevel(bool fromEditor = false)
     {
-        Vector2 levelDirection = (parentObject.localRotation * Vector2.up).normalized;
+        Vector3 levelDirection = (parentObject.localRotation * Vector3.up).normalized;
         spawnedSectionsList = new List<Section>();
 
         // Spawn and place start section
@@ -48,11 +48,11 @@ public class LevelBuilder
 
         for (int i = 1; i < iterationCount + 1; i++)
         {
-            Vector3 newSectionPosiiton = (Vector2)StartObject.transform.position + (levelDirection * propGaps * i);
+            Vector3 newSectionPosiiton = StartObject.transform.position + (levelDirection * propGaps * i);
 
             // Spawn and place section in hierarchy 
-            Transform section = Object.Instantiate(sectionPrefab, newSectionPosiiton, StartObject.rotation);
-            section.SetParent(parentObject, true);
+            GameObject section = Object.Instantiate(sectionPrefab.gameObject, newSectionPosiiton, StartObject.rotation);
+            section.transform.SetParent(parentObject, true);
 
             Section sectionScript = section.GetComponent<Section>();
             // Setup section
@@ -67,7 +67,7 @@ public class LevelBuilder
                 section.gameObject.SetActive(false);
         }
 
-        Transform finishObject = Object.Instantiate(finishPrefab, (Vector2)StartObject.transform.position + (levelDirection * propGaps * (iterationCount + 1)), StartObject.rotation);
+        Transform finishObject = Object.Instantiate(finishPrefab, StartObject.transform.position + (levelDirection * propGaps * (iterationCount + 1)), StartObject.rotation);
         finishObject.SetParent(parentObject, true);
     }
 
