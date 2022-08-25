@@ -11,6 +11,8 @@ public class Section : MonoBehaviour
     int startNumber;
     int increment;
 
+    public int OrdinalNumber { get => ordinalNumber;}
+
     public void SetUp(int startNumber, int increment, int ordinalNumber)
     {
         this.increment = increment;

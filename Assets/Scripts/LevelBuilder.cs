@@ -12,12 +12,14 @@ public class LevelBuilder
     Transform startPrefab;
     Transform finishPrefab;
     Transform sectionPrefab;
+    List<Section> spawnedSectionsList;
     Transform cellPrefab;
     float propGaps;
 
     public Transform StartObject;
     public Transform FinishObject;
     public Transform PlayerObject;
+    public List<Section> SpawnedSectionsList { get => spawnedSectionsList;}
 
     public LevelBuilder(
         GameManager gameManager,
@@ -38,6 +40,7 @@ public class LevelBuilder
     public void BuidLevel(bool fromEditor = false)
     {
         Vector2 levelDirection = (parentObject.localRotation * Vector2.up).normalized;
+        spawnedSectionsList = new List<Section>();
 
         // Spawn and place start section
         StartObject = Object.Instantiate(startPrefab, parentObject.position, parentObject.localRotation);
@@ -56,6 +59,8 @@ public class LevelBuilder
             sectionScript.SetUp(startNumber, increment, i);
             // Trigger cell spawn
             sectionScript.SpawnCells(cellPrefab);
+            // Add section to spawned sections list
+            spawnedSectionsList.Add(sectionScript);
 
             if (!fromEditor)
                 // Disable section

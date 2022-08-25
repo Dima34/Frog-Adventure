@@ -1,31 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] GameManager _gameManager;
     [SerializeField] float _movementTime = 1.25f;
     [Space(5)]
     [Header("Move animation  settings")]
     [SerializeField] Animator _moveAnimator;
 
-
-    Camera _mainCamera;
-    Vector3 _fromPos;
-    Vector3 _toPos;
-    Collider2D _collidedObject;
+    GameManager gameManager;
+    Camera mainCamera;
+    Vector3 fromPos;
+    Vector3 toPos;
+    Collider2D collidedObject;
 
     bool _isMoving;
 
-    private void Start()
-    {
-        _mainCamera = Camera.main;
+    private void Awake() {
+        mainCamera = Camera.main;
+        gameManager = GameObject.FindObjectOfType<GameManager>();
     }
-
+    
     void Update()
     {
         HandleMove();
+        handleCameraPosition();
+    }
+
+    void handleCameraPosition(){
+        Debug.Log("Handle");
+        mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
     }
 
     void HandleMove()
@@ -34,9 +40,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !_isMoving)
         {
-            clickPos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            _fromPos = transform.position;
-            _toPos = new Vector3(clickPos.x, clickPos.y, 0);
+            clickPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            fromPos = transform.position;
+            toPos = new Vector3(clickPos.x, clickPos.y, 0);
 
             StartCoroutine("moveSequence");
             _isMoving = true;
@@ -52,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
         while (t < _movementTime)
         {
             t += Time.deltaTime;
-            transform.position = Vector3.Lerp(_fromPos, _toPos, Utils.EaseInOut(t / _movementTime));
+            transform.position = Vector3.Lerp(fromPos, toPos, Utils.EaseInOut(t / _movementTime));
             yield return null;
         }
 
@@ -82,12 +88,12 @@ public class PlayerMovement : MonoBehaviour
 
     void checkUnderFeet()
     {
-        if (_collidedObject == null){
+        if (collidedObject == null){
             restartLevel();
             return;
         }
 
-        switch (_collidedObject.tag)
+        switch (collidedObject.tag)
         {
             case "Cell":
                 cellUnderFeet();
@@ -103,28 +109,28 @@ public class PlayerMovement : MonoBehaviour
 
     void cellUnderFeet()
     {
-        Transform cellTransform = _collidedObject.transform;
+        Transform cellTransform = collidedObject.transform;
         int cellNumber = cellTransform.GetComponent<Cell>().Number;
 
-        // if(cellNumber == _gameManagerDataSO.CurrentNumber){
-        //     _gameManagerDataSO.NextSectionNumber();
-        // } else{
-        //     restartLevel();
-        // }
+        if(cellNumber == gameManager.CurrentNumber){
+            gameManager.NextSectionNumber();
+        } else{
+            restartLevel();
+        }
     }
 
     void restartLevel(){
-        _gameManager.RestartLevel();      
+        gameManager.RestartLevel();      
     }
 
     private void OnTriggerEnter2D(Collider2D collidedObj)
     {
-        _collidedObject = collidedObj;
+        collidedObject = collidedObj;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        _collidedObject = null;
+        collidedObject = null;
     }
 }
 

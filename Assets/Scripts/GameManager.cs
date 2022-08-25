@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public LevelData LevelDataSO;
+    [SerializeField] CameraMovement cameraObject;
 
     public int StartNumber { get => startNumber; }
     public int Increment { get => increment; }
@@ -17,11 +18,11 @@ public class GameManager : MonoBehaviour
     public Transform CellPrefab { get => cellPrefab; }
     public float PropGaps { get => propGaps; }
     public int CurrentNumber { get => currentNumber; }
-    [SerializeField] CameraMovement cameraObject;
 
     int startNumber;
     int increment;
     int iterationCount;
+    int iteration = 0;
     Transform playerPrefab;
     Transform startPrefab;
     Transform finishPrefab;
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         BuildLevelSequence();
+        NextSectionNumber();
     }
 
     public void BuildLevelSequence(bool fromEditor = false)
@@ -58,6 +60,14 @@ public class GameManager : MonoBehaviour
         propGaps = LevelDataSO.PropGaps;
     }
 
+    void checkSections(){
+        levelBuilder.SpawnedSectionsList.ForEach(delegate(Section section){
+            if(section.OrdinalNumber == iteration){
+                section.gameObject.SetActive(true);
+            }
+        });
+    }
+
     void setCamera()
     {
         cameraObject.PlayerTransform = levelBuilder.PlayerObject;
@@ -66,8 +76,10 @@ public class GameManager : MonoBehaviour
 
     public void NextSectionNumber()
     {
+        iteration++;
         currentNumber += increment;
         GlobalEventManager.OnCurrentNumberChange.Fire(currentNumber);
+        checkSections();
     }
 
     void createLevel(bool fromEditor)
