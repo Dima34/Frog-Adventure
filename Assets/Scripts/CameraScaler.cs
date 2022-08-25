@@ -4,20 +4,22 @@ using UnityEngine;
 
 public class CameraScaler : MonoBehaviour
 {
-    [SerializeField] int width = 570;
-    [SerializeField] int height = 780;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        Camera camera = Camera.main;
+    [SerializeField] Vector2 _defaultResolution = new Vector2(570, 780);
 
-        Screen.SetResolution(width, height, false);
+    Camera cameraComponent;
+
+    float initAspect;
+    float initSize;
+
+    private void Start() {
+        cameraComponent = GetComponent<Camera>();
+        initAspect = _defaultResolution.x / _defaultResolution.y;
+        initSize = cameraComponent.orthographicSize;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void Update() {
+        float currentRatio;
+        float calculatedSize = initSize * (initAspect / cameraComponent.aspect);
+        cameraComponent.orthographicSize = calculatedSize;
     }
 }

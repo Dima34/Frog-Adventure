@@ -12673,9 +12673,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499427, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: far clip plane
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499427, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: near clip plane
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499427, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: orthographic size
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 2955654787849499612, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
       propertyPath: m_RootOrder
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499612, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499612, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499612, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2955654787849499612, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12716,6 +12740,30 @@ PrefabInstance:
     - target: {fileID: 2955654787849499612, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499614, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499614, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: WidthOrHeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499614, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: DefaultResolution.x
+      value: 580
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499614, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: DefaultResolution.y
+      value: 720
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499614, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: _defaultResolution.x
+      value: 570
+      objectReference: {fileID: 0}
+    - target: {fileID: 2955654787849499614, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+      propertyPath: _defaultResolution.y
+      value: 780
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
