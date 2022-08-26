@@ -84,7 +84,6 @@ public class Section : MonoBehaviour
     }
 
     public void LeaveCorrectCell(){
-        Debug.Log("leave correct cell");
         for (int i = 0; i < cellsList.Count; i++)
         {
             if(i != correctCellIndex){

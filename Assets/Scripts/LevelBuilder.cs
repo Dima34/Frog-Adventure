@@ -37,7 +37,7 @@ public class LevelBuilder
         propGaps = gameManager.PropGaps;
     }
     
-    public void BuidLevel(bool fromEditor = false)
+    public void BuildLevel(bool fromEditor = false)
     {
         Vector3 levelDirection = (parentObject.localRotation * Vector3.up).normalized;
         spawnedSectionsList = new List<Section>();
@@ -67,8 +67,8 @@ public class LevelBuilder
                 section.gameObject.SetActive(false);
         }
 
-        Transform finishObject = Object.Instantiate(finishPrefab, StartObject.transform.position + (levelDirection * propGaps * (iterationCount + 1)), StartObject.rotation);
-        finishObject.SetParent(parentObject, true);
+        FinishObject = Object.Instantiate(finishPrefab, StartObject.transform.position + (levelDirection * propGaps * (iterationCount + 1)), StartObject.rotation);
+        FinishObject.SetParent(parentObject, true);
     }
 
     public void CreatePlayer()
@@ -76,5 +76,7 @@ public class LevelBuilder
         // Teleport player on start plate
         PlayerObject = Object.Instantiate(playerPrefab, StartObject.position, StartObject.rotation);
         PlayerObject.SetParent(parentObject);
+
+        GlobalEventManager.OnPlayerCreated.Fire(PlayerObject);
     }
 }

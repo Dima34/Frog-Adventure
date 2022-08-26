@@ -26,11 +26,6 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         HandleMove();
-        handleCameraPosition();
-    }
-
-    void handleCameraPosition(){
-        mainCamera.transform.position = new Vector3(transform.position.x, transform.position.y, mainCamera.transform.position.z);
     }
 
     void HandleMove()

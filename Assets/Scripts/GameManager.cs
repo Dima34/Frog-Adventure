@@ -6,7 +6,10 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public LevelData LevelDataSO;
-    [SerializeField] CameraMovement cameraObject;
+    [HideInInspector]
+    public LevelBuilder LevelBuilder;
+    [SerializeField]
+    public GameObject LevelContainer;
 
     public int StartNumber { get => startNumber; }
     public int Increment { get => increment; }
@@ -19,6 +22,7 @@ public class GameManager : MonoBehaviour
     public float PropGaps { get => propGaps; }
     public int CurrentNumber { get => currentNumber; }
 
+
     int startNumber;
     int increment;
     int iterationCount;
@@ -29,7 +33,6 @@ public class GameManager : MonoBehaviour
     Section sectionPrefab;
     Cell cellPrefab;
     float propGaps;
-    LevelBuilder levelBuilder;
 
 
     int currentNumber;
@@ -44,7 +47,6 @@ public class GameManager : MonoBehaviour
     {
         setLevelData();
         createLevel(fromEditor);
-        setCamera();
     }
 
     void setLevelData()
@@ -61,27 +63,21 @@ public class GameManager : MonoBehaviour
     }
 
     void checkSections(){
-        levelBuilder.SpawnedSectionsList.ForEach(delegate(Section section){
+        LevelBuilder.SpawnedSectionsList.ForEach(delegate(Section section){
             if(section.OrdinalNumber == iteration){
                 section.gameObject.SetActive(true);
             }
         });
     }
 
-    void setCamera()
-    {
-        cameraObject.PlayerTransform = levelBuilder.PlayerObject;
-        cameraObject.SetPosition();
-    }
-
     public void NextSectionNumber()
     {
         if(currentNumber != 0)
-            levelBuilder.SpawnedSectionsList[currentNumber - 1].LeaveCorrectCell();
+            LevelBuilder.SpawnedSectionsList[currentNumber - 1].LeaveCorrectCell();
 
         iteration++;
         currentNumber += increment;
-        GlobalEventManager.OnCurrentNumberChange.Fire(currentNumber);
+        GlobalEventManager.OnCurrentNumberChange.Fire();
         checkSections();
     }
 
@@ -95,11 +91,13 @@ public class GameManager : MonoBehaviour
             GameManager.DestroyImmediate(playground);
 
         // Spawn a level parent container (playground)
-        GameObject levelContainer = new GameObject("Playground");
+        LevelContainer = new GameObject("Playground");
 
-        levelBuilder = new LevelBuilder(this, levelContainer.transform);
-        levelBuilder.BuidLevel(fromEditor);
-        levelBuilder.CreatePlayer();
+        LevelBuilder = new LevelBuilder(this, LevelContainer.transform);
+        LevelBuilder.BuildLevel(fromEditor);
+        LevelBuilder.CreatePlayer();
+
+        GlobalEventManager.OnLevelBuilded.Fire();
     }
 
     public void RestartLevel()

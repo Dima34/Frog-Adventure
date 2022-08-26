@@ -18,7 +18,6 @@ public class CameraScaler : MonoBehaviour
     }
 
     private void Update() {
-        float currentRatio;
         float calculatedSize = initSize * (initAspect / cameraComponent.aspect);
         cameraComponent.orthographicSize = calculatedSize;
     }
