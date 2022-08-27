@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [Space(5)]
     [Header("Move animation  settings")]
     [SerializeField] Animator _moveAnimator;
+    [SerializeField] float _delayedUnplugTime = 0.5f;
 
     GameManager gameManager;
     Camera mainCamera;
@@ -18,11 +19,12 @@ public class PlayerMovement : MonoBehaviour
 
     bool _isMoving;
 
-    private void Awake() {
+    private void Awake()
+    {
         mainCamera = Camera.main;
         gameManager = GameObject.FindObjectOfType<GameManager>();
     }
-    
+
     void Update()
     {
         HandleMove();
@@ -42,6 +44,8 @@ public class PlayerMovement : MonoBehaviour
             _isMoving = true;
         }
     }
+
+
 
     IEnumerator moveSequence()
     {
@@ -82,7 +86,8 @@ public class PlayerMovement : MonoBehaviour
 
     void checkUnderFeet()
     {
-        if (collidedObject == null){
+        if (collidedObject == null)
+        {
             restartLevel();
             return;
         }
@@ -103,18 +108,42 @@ public class PlayerMovement : MonoBehaviour
 
     void cellUnderFeet()
     {
-        Transform cellTransform = collidedObject.transform;
-        int cellNumber = cellTransform.GetComponent<Cell>().Number;
+        Cell cellScript = collidedObject.transform.GetComponent<Cell>();
+        int cellNumber = cellScript.Number;
 
-        if(cellNumber == gameManager.CurrentNumber){
+        if (cellNumber == gameManager.CurrentNumber)
+        {
             gameManager.NextSectionNumber();
-        } else{
+            cellScript.OnMoveEvent += followCell;
+        }
+        else
+        {
             restartLevel();
         }
     }
 
-    void restartLevel(){
-        gameManager.RestartLevel();      
+    void followCell(Vector2 positionAddition)
+    {
+        transform.position += (Vector3)positionAddition;
+        fromPos += (Vector3)positionAddition;
+    }
+
+    void restartLevel()
+    {
+        gameManager.RestartLevel();
+    }
+
+    void removeCellFollow(Collider2D collidedObject)
+    {
+        if (collidedObject.tag == "Cell")
+        {
+            Cell cellScript = collidedObject.GetComponent<Cell>();
+
+            if (cellScript.OnMoveEvent != null)
+            {
+                cellScript.OnMoveEvent -= followCell;
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collidedObj)
@@ -122,8 +151,10 @@ public class PlayerMovement : MonoBehaviour
         collidedObject = collidedObj;
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit2D(Collider2D collidedObj)
     {
+        removeCellFollow(collidedObj);
+
         collidedObject = null;
     }
 }

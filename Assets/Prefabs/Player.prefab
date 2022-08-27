@@ -152,9 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e32b933ba74762249b1f18d7870f7b0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameManager: {fileID: 0}
   _movementTime: 1.25
   _moveAnimator: {fileID: 8413168908513613944}
+  _delayedUnplugTime: 0
 --- !u!58 &8413168908945671570
 CircleCollider2D:
   m_ObjectHideFlags: 0

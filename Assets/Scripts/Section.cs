@@ -119,10 +119,18 @@ public class Section : MonoBehaviour
 
         while (true)
         {
-            if(currentX <= leftX || currentX >= rightX)
+            if(currentX < leftX){
+                currentX = leftX;
                 isMovingLeft = !isMovingLeft;
+            } else if(currentX > rightX){
+                currentX = rightX;
+                isMovingLeft = !isMovingLeft;
+            }
             
-            currentX = currentX + (movingSpeed * Time.deltaTime * (isMovingLeft ? 1 : -1));
+            float xAddition = (movingSpeed * Time.deltaTime * (isMovingLeft ? 1 : -1));
+            cell.OnMoveEvent?.Invoke(new Vector2(xAddition, 0));
+
+            currentX = currentX + xAddition;
             cell.transform.position = new Vector2(currentX ,cell.transform.position.y);            
             yield return null;
         }
