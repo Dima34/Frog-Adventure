@@ -99,5 +99,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sideMarginSize: 3
   _cellAmount: 3
-  _gameManager: {fileID: 7881933993445490937, guid: 411fd57b2dc64ae48aabac334a4c26d2, type: 3}
-  OrdinalNumber: 0
+  willCellsMove: 1
+  cellMoveSpeed: 70

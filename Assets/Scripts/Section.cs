@@ -10,12 +10,15 @@ public class Section : MonoBehaviour
 
     [SerializeField] float _sideMarginSize = 2f;
     [SerializeField] int _cellAmount = 3;
+    [SerializeField] bool willCellsMove = false;
+    [SerializeField] float cellMoveSpeed = 30f;
 
     int ordinalNumber;
     int startNumber;
     int increment;
     int correctCellIndex;
     List<Cell> cellsList;
+
 
     public void SetUp(int startNumber, int increment, int ordinalNumber)
     {
@@ -24,17 +27,21 @@ public class Section : MonoBehaviour
         this.ordinalNumber = ordinalNumber;
     }
 
-    public void SpawnCells(Cell cell)
-    {
-        if (_cellAmount < 1) _cellAmount = 1;
-        cellsList = new List<Cell>();
-
+    float calcMarginIncludedSize(Cell cell){
         // Find cell half size
         float cellHalfSize = cell.transform.localScale.x / 2;
         // Find one side margin which includes margins and cell half (because when we spawn we specify the center coords. We need that to create cells on side and don`t calculate the half + center coords each time)
         float sideMargin = cellHalfSize + _sideMarginSize;
         // Calculate section width includes margin
-        float includedSectionWidth = transform.localScale.x - sideMargin * 2;
+        return transform.localScale.x - sideMargin * 2;
+    }
+
+    public void SpawnCells(Cell cell)
+    {
+        if (_cellAmount < 1) _cellAmount = 1;
+        cellsList = new List<Cell>();
+
+        float includedSectionWidth = calcMarginIncludedSize(cell);
         // Calctulate gaps between cells
         float cellGap = includedSectionWidth / (_cellAmount == 1 ? _cellAmount : (_cellAmount - 1));
         // Get section horizontal vector from center to left
@@ -88,7 +95,37 @@ public class Section : MonoBehaviour
         {
             if(i != correctCellIndex){
                 GameObject.Destroy(cellsList[i].gameObject);
+            } else if(willCellsMove){
+                StartCellMoveSequence(cellsList[i]);
             }
         }
+    }
+
+    public void StartCellMoveSequence(Cell cell){
+        float moveWayLength = calcMarginIncludedSize(cell) - cell.transform.lossyScale.x;
+        Vector2 leftPoint = transform.position - (transform.right * moveWayLength / 2);
+        Vector2 rightPoint = transform.position + (transform.right * moveWayLength / 2);
+
+        StartCoroutine(cellMovement(cell, leftPoint, rightPoint));
+    }
+
+    IEnumerator cellMovement(Cell cell, Vector2 leftPoint, Vector2 rightPoint){        
+        bool isMovingLeft = true;
+
+        float movingSpeed = cellMoveSpeed / 10;
+        float leftX = leftPoint.x;
+        float rightX = rightPoint.x;
+        float currentX = cell.transform.position.x;
+
+        while (true)
+        {
+            if(currentX <= leftX || currentX >= rightX)
+                isMovingLeft = !isMovingLeft;
+            
+            currentX = currentX + (movingSpeed * Time.deltaTime * (isMovingLeft ? 1 : -1));
+            cell.transform.position = new Vector2(currentX ,cell.transform.position.y);            
+            yield return null;
+        }
+
     }
 }

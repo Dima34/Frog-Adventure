@@ -84,16 +84,11 @@ public class CameraMovement : MonoBehaviour
 
                 if(objectRelativeY < 0) continue;
 
-                Debug.Log("Obj relative " + objectRelativeY);
-
-                if(objectRelativeY <= cameraInUnitHeight / 2 && objectRelativeY > 0){
-                    Debug.Log("first statement");
+                if(objectRelativeY <= cameraInUnitHeight / 2 && objectRelativeY > 0)
                     bY = (cameraObject.transform.position + (objectRelativeY * cameraObject.transform.up)).y;
-                }
 
                 if(objectRelativeY > cameraInUnitHeight / 2 && objectRelativeY <= cameraInUnitHeight){
                     isCameraMooving = false;
-                    Debug.Log("second statement");
                     yield break;
                 }
             }
