@@ -7,100 +7,116 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] GameManager gameManager;
     Camera cameraObject;
+    Vector2 currentCameraPosition;
     Transform playerObject;
     GameObject levelContainer;
     Transform startObject;
     Transform finishObject;
+    Vector2 finishTop;
+    Vector2 startBottom;
     float cameraInUnitHeight;
 
     bool isCameraMooving = false;
     bool nextInstantCameraMove = false;
 
-    private void Awake() {
+    private void Awake()
+    {
         GlobalEventManager.OnLevelBuilded.AddListener(Initialize);
-        GlobalEventManager.OnPlayerCreated.AddListener((Transform player) => {
-            playerObject = player;
-            nextInstantCameraMove = true;
-        });
+        GlobalEventManager.OnPlayerCreated.AddListener((Transform player) =>{playerObject = player;});
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkPosition);
     }
 
-    void Initialize(){
-        cameraObject = GetComponent<Camera>();
-        cameraInUnitHeight = cameraObject.orthographicSize * 2;
-        startObject = gameManager.LevelBuilder.StartObject;
-        finishObject = gameManager.LevelBuilder.FinishObject;
+    void Initialize()
+    {
+        initializeStartNFinish();
+        initializeCamera();
         levelContainer = gameManager.LevelContainer;
     }
 
-    
+    void initializeCamera()
+    {
+        cameraObject = GetComponent<Camera>();
+        cameraInUnitHeight = cameraObject.orthographicSize * 2;
+        currentCameraPosition = cameraObject.transform.position;
 
-    void checkPosition(){
-        if(playerObject == null){
-            Debug.LogError("Player variable in camera movement is null *check position method. Try assign player first");
-            return;
-        }
+        setCameraStartPosition();
+    }
 
+    void initializeStartNFinish()
+    {
+        startObject = gameManager.LevelBuilder.StartObject;
+        finishObject = gameManager.LevelBuilder.FinishObject;
+
+        finishTop = finishObject.position - (-finishObject.up * (finishObject.localScale.y / 2));
+        startBottom = startObject.position - (startObject.up * (startObject.localScale.y / 2));
+    }
+
+    void setCameraStartPosition()
+    {
+        nextInstantCameraMove = true;
+        currentCameraPosition = cameraObject.transform.position;
+
+        Vector2 newCameraPosition = startBottom + (Vector2)(cameraObject.transform.up * (cameraInUnitHeight / 2));
+
+        Debug.DrawLine(newCameraPosition, currentCameraPosition, Color.red, 20f);
+
+        moveVertical(cameraObject, currentCameraPosition, newCameraPosition, finishTop);
+    }
+
+    void checkPosition()
+    {
         float yPlayerPosition = cameraObject.WorldToViewportPoint(playerObject.position).y;
-        float cameraHeight = cameraObject.scaledPixelHeight;
 
-        Vector2 finishTop = finishObject.position - (-finishObject.up * (finishObject.localScale.y / 2));
-        Vector2 startBottom = startObject.position - (startObject.up * (startObject.localScale.y / 2));
-
-        List<Vector2> deathPoints = new List<Vector2>();
-        deathPoints.Add(finishTop);
-        deathPoints.Add(startBottom);
-
-        if(yPlayerPosition > 0.125){
-            // Get camera center in world position
-            Vector2 currentCameraPosition = cameraObject.transform.position;
+        if (yPlayerPosition > 0.125)
+        {
+            currentCameraPosition = cameraObject.transform.position;
             // Get current player posistion
             Vector2 currentPlayerPosition = playerObject.transform.position;
             Vector2 cameraShift = cameraObject.transform.up * (cameraInUnitHeight / 4);
-            moveVertical(cameraObject ,currentCameraPosition, currentPlayerPosition + cameraShift, deathPoints);
+            moveVertical(cameraObject, currentCameraPosition, currentPlayerPosition + cameraShift, finishTop);
         }
     }
 
-    void moveVertical(Camera cameraObject, Vector2 a, Vector2 b, List<Vector2> deathPoints){
-        if(!isCameraMooving){
+    void moveVertical(Camera cameraObject, Vector2 a, Vector2 b, Vector2 finishDeathCorner)
+    {
+        if (!isCameraMooving)
+        {
             isCameraMooving = true;
-
-            StartCoroutine(moveVerticalCoroutine(cameraObject, a, b, deathPoints));
+            StartCoroutine(moveVerticalCoroutine(cameraObject, a, b, finishDeathCorner));
         }
     }
 
-    IEnumerator moveVerticalCoroutine(Camera cameraObject, Vector2 a, Vector2 b, List<Vector2> deathPoints){
+    IEnumerator moveVerticalCoroutine(Camera cameraObject, Vector2 a, Vector2 b, Vector2 finishDeathCorner)
+    {
         float aY = a.y;
         float bY = b.y;
         float t = 0;
 
         while (t <= 1)
         {
-            for (int i = 0; i < deathPoints.Count; i++)
+            float finishObjectRelativeY = cameraObject.WorldToViewportPoint(finishDeathCorner).y;
+            
+
+            // if(objectRelativeY < 0) continue;
+
+            // if(objectRelativeY > cameraInUnitHeight / 2 && objectRelativeY <= cameraInUnitHeight){
+            //     isCameraMooving = false;
+            //     yield break;
+            // }
+
+            if (nextInstantCameraMove)
             {
-                Vector2 deathPoint = deathPoints[i];
-                float objectRelativeY = MathF.Round(cameraObject.WorldToViewportPoint(deathPoint).y * cameraInUnitHeight, 2);
-                float pointY = deathPoint.y;
-
-                if(objectRelativeY < 0) continue;
-
-                if(objectRelativeY <= cameraInUnitHeight / 2 && objectRelativeY > 0)
-                    bY = (cameraObject.transform.position + (objectRelativeY * cameraObject.transform.up)).y;
-
-                if(objectRelativeY > cameraInUnitHeight / 2 && objectRelativeY <= cameraInUnitHeight){
-                    isCameraMooving = false;
-                    yield break;
-                }
-            }
-
-            if(nextInstantCameraMove){
                 t = 1;
                 nextInstantCameraMove = false;
-            } else{
+            }
+            else
+            {
                 t += Time.deltaTime;
             }
+
             float newY = Mathf.Lerp(aY, bY, t);
             cameraObject.transform.position = new Vector3(cameraObject.transform.position.x, newY, -10);
+
             yield return null;
         }
 
