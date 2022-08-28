@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StartNumber: 0
   Increment: 1
-  IterationCount: 10
+  IterationCount: 3
   Player: {fileID: 8413168908945671572, guid: 020efcaab85c21349a74292909d7fcda, type: 3}
   StartPrefab: {fileID: 8840974579410243326, guid: 9244bcde49f7a2243a30c495705878be, type: 3}
   FinishPrefab: {fileID: 5575744622065984935, guid: b6e97a11342e24e4c80975f198b82237, type: 3}

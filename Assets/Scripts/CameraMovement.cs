@@ -28,8 +28,14 @@ public class CameraMovement : MonoBehaviour
     {
         GetComponent<CameraScaler>().ScaleCamera();
         GlobalEventManager.OnLevelBuilded.AddListener(Initialize);
-        GlobalEventManager.OnPlayerCreated.AddListener((Transform player) =>{playerObject = player;});
+        GlobalEventManager.OnPlayerCreated.AddListener(setPlayerObject);
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkPosition);
+    }
+
+    private void OnDestroy() {
+        GlobalEventManager.OnLevelBuilded.RemoveListener(Initialize);
+        GlobalEventManager.OnPlayerCreated.RemoveListener(setPlayerObject);
+        GlobalEventManager.OnCurrentNumberChange.RemoveListener(checkPosition);
     }
 
     void Initialize()
@@ -57,9 +63,12 @@ public class CameraMovement : MonoBehaviour
         startBottom = startObject.position - (startObject.up * (startObject.localScale.y / 2));
     }
 
+    void setPlayerObject(Transform player){
+        playerObject = player;
+    }
+
     void setCameraStartPosition()
     {
-        Debug.Log("Set camera with scale - " + cameraObject.orthographicSize);
         nextInstantCameraMove = true;
         currentCameraPosition = cameraObject.transform.position;
         
@@ -67,7 +76,7 @@ public class CameraMovement : MonoBehaviour
 
         moveVertical(cameraObject, currentCameraPosition, newCameraPosition, finishTop);
     }
-
+    
     void checkPosition()
     {
         float yPlayerPosition = cameraObject.WorldToViewportPoint(playerObject.position).y;
@@ -100,13 +109,11 @@ public class CameraMovement : MonoBehaviour
         while (t <= 1)
         {
             float finishObjectRelativeY = cameraObject.WorldToViewportPoint(finishDeathCorner).y * cameraInUnitHeight;
-            Debug.Log("Finist object relative Y - " + finishObjectRelativeY);
-            Debug.Log("Camera in unit height - " + cameraInUnitHeight);
 
             if(finishObjectRelativeY <= cameraInUnitHeight){
-                isCameraMooving = false;
-                yield break;
-            }
+                bY = (finishDeathCorner - (Vector2)(cameraObject.transform.up * (cameraInUnitHeight / 2))).y;
+                nextInstantCameraMove = true;
+            }   
 
             if (nextInstantCameraMove)
             {
