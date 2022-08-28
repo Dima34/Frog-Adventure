@@ -8,16 +8,11 @@ public class CameraScaler : MonoBehaviour
 
     Camera cameraComponent;
 
-    float initAspect;
-    float initSize;
-
-    private void Start() {
+    public void ScaleCamera(){
         cameraComponent = GetComponent<Camera>();
-        initAspect = _defaultResolution.x / _defaultResolution.y;
-        initSize = cameraComponent.orthographicSize;
-    }
+        float initAspect = _defaultResolution.x / _defaultResolution.y;
+        float initSize = cameraComponent.orthographicSize;
 
-    private void Update() {
         float calculatedSize = initSize * (initAspect / cameraComponent.aspect);
         cameraComponent.orthographicSize = calculatedSize;
     }

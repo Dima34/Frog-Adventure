@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[RequireComponent(typeof(CameraScaler))]
 public class CameraMovement : MonoBehaviour
 {
     [SerializeField] GameManager gameManager;
+
+    CameraScaler cameraScaler;
     Camera cameraObject;
     Vector2 currentCameraPosition;
     Transform playerObject;
@@ -18,9 +21,12 @@ public class CameraMovement : MonoBehaviour
 
     bool isCameraMooving = false;
     bool nextInstantCameraMove = false;
+    bool isLevelBuilded = false;
+    bool isCameraScaled = false;
 
     private void Awake()
     {
+        GetComponent<CameraScaler>().ScaleCamera();
         GlobalEventManager.OnLevelBuilded.AddListener(Initialize);
         GlobalEventManager.OnPlayerCreated.AddListener((Transform player) =>{playerObject = player;});
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkPosition);
@@ -53,12 +59,11 @@ public class CameraMovement : MonoBehaviour
 
     void setCameraStartPosition()
     {
+        Debug.Log("Set camera with scale - " + cameraObject.orthographicSize);
         nextInstantCameraMove = true;
         currentCameraPosition = cameraObject.transform.position;
-
+        
         Vector2 newCameraPosition = startBottom + (Vector2)(cameraObject.transform.up * (cameraInUnitHeight / 2));
-
-        Debug.DrawLine(newCameraPosition, currentCameraPosition, Color.red, 20f);
 
         moveVertical(cameraObject, currentCameraPosition, newCameraPosition, finishTop);
     }
@@ -94,15 +99,14 @@ public class CameraMovement : MonoBehaviour
 
         while (t <= 1)
         {
-            float finishObjectRelativeY = cameraObject.WorldToViewportPoint(finishDeathCorner).y;
-            
+            float finishObjectRelativeY = cameraObject.WorldToViewportPoint(finishDeathCorner).y * cameraInUnitHeight;
+            Debug.Log("Finist object relative Y - " + finishObjectRelativeY);
+            Debug.Log("Camera in unit height - " + cameraInUnitHeight);
 
-            // if(objectRelativeY < 0) continue;
-
-            // if(objectRelativeY > cameraInUnitHeight / 2 && objectRelativeY <= cameraInUnitHeight){
-            //     isCameraMooving = false;
-            //     yield break;
-            // }
+            if(finishObjectRelativeY <= cameraInUnitHeight){
+                isCameraMooving = false;
+                yield break;
+            }
 
             if (nextInstantCameraMove)
             {
