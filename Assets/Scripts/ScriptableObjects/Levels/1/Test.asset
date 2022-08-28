@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 461515f3f110db54f8f4fe038b72699f, type: 3}
-  m_Name: _1.1
+  m_Name: Test
   m_EditorClassIdentifier: 
   StartNumber: 0
   Increment: 1
-  IterationCount: 10
+  IterationCount: 1
   Player: {fileID: 8413168908945671572, guid: 020efcaab85c21349a74292909d7fcda, type: 3}
   StartPrefab: {fileID: 8840974579410243326, guid: 9244bcde49f7a2243a30c495705878be, type: 3}
   FinishPrefab: {fileID: 5575744622065984935, guid: b6e97a11342e24e4c80975f198b82237, type: 3}
-  Section: {fileID: 6559451546653941113, guid: 23667c6d1baace64691e8f48c19de63d, type: 3}
-  Cell: {fileID: 5219142901616383696, guid: 084cab433549f0042af155d841647801, type: 3}
+  Section: {fileID: 6559451546653941062, guid: 23667c6d1baace64691e8f48c19de63d, type: 3}
+  Cell: {fileID: 5219142901616382254, guid: 084cab433549f0042af155d841647801, type: 3}
   PropGaps: 20

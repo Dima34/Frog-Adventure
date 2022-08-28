@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _numberText: {fileID: 5219142902653781988}
+  _animTime: 2
   Number: 12
 --- !u!61 &4543726862175627321
 BoxCollider2D:
