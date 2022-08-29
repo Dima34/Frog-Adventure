@@ -32,26 +32,27 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleMove()
     {
-        Vector3 clickPos;
-
         if (Input.GetMouseButtonDown(0) && !_isMoving)
         {
-            clickPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            fromPos = transform.position;
-            toPos = new Vector3(clickPos.x, clickPos.y, 0);
+            Vector3 pointToMove = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            pointToMove.z = 0;
 
-            StartCoroutine("moveSequence");
-            _isMoving = true;
+            MovePlayer(transform.position, pointToMove);
         }
     }
 
+    public void MovePlayer(Vector3 from, Vector3 to){
+        StartCoroutine(MovePlayerSequence(from, to));
+    }
 
-
-    IEnumerator moveSequence()
+    IEnumerator MovePlayerSequence(Vector3 from, Vector3 to)
     {
+        fromPos = from;
+        toPos = to;
+        _isMoving = true;
         float t = 0;
 
-        startAnimationSequence();
+        startMoveAnimationSequence();
 
         while (t < _movementTime)
         {
@@ -63,7 +64,8 @@ public class PlayerMovement : MonoBehaviour
         _isMoving = false;
         checkUnderFeet();
     }
-    void startAnimationSequence()
+
+    void startMoveAnimationSequence()
     {
         StartCoroutine("handleAnimationTimeChange");
     }
@@ -98,10 +100,8 @@ public class PlayerMovement : MonoBehaviour
                 cellUnderFeet();
                 break;
             case "Finsh":
-                Debug.Log("obj is cell");
                 break;
             case "Start":
-                Debug.Log("this is still start");
                 break;
         }
     }

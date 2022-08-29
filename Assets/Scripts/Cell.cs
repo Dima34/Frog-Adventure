@@ -8,11 +8,10 @@ public class Cell : MonoBehaviour
     [SerializeField] TMP_Text _numberText;
     public Action<Vector2> OnMoveEvent;
 
-    
     [HideInInspector]
     public int Number;
 
-    private void Awake() {
+    private void Start() {
         SetNumber();
     }
 

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public LevelBuilder LevelBuilder;
     [SerializeField]
-    
+
     [HideInInspector]
     public GameObject LevelContainer;
 
@@ -41,14 +41,16 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        BuildLevelSequence();
+        StartGameSequence();
         NextSectionNumber();
     }
 
-    public void BuildLevelSequence(bool fromEditor = false)
+    public void StartGameSequence(bool fromEditor = false)
     {
         setLevelData();
         createLevel(fromEditor);
+        if(!fromEditor)
+            LevelBuilder.SpawnPlayer();
     }
 
     void setLevelData()
@@ -64,9 +66,12 @@ public class GameManager : MonoBehaviour
         propGaps = LevelDataSO.PropGaps;
     }
 
-    void checkSections(){
-        LevelBuilder.SpawnedSectionsList.ForEach(delegate(Section section){
-            if(section.OrdinalNumber == iteration){
+    void checkSections()
+    {
+        LevelBuilder.SpawnedSectionsList.ForEach(delegate (Section section)
+        {
+            if (section.OrdinalNumber == iteration)
+            {
                 section.gameObject.SetActive(true);
             }
         });
@@ -74,7 +79,7 @@ public class GameManager : MonoBehaviour
 
     public void NextSectionNumber()
     {
-        if(currentNumber != 0)
+        if (currentNumber != 0)
             LevelBuilder.SpawnedSectionsList[currentNumber - 1].LeaveCorrectCell();
 
         iteration++;
@@ -104,7 +109,28 @@ public class GameManager : MonoBehaviour
 
     public void RestartLevel()
     {
-        Scene activeScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(activeScene.buildIndex);
+        if (LevelBuilder.SectionsContainer)
+        {
+            LevelBuilder.SpawnedSectionsList.ForEach(delegate (Section section)
+            {
+                StartCoroutine(HideSections());                    
+            });
+        }
+    }
+
+    public IEnumerator HideSections(){
+        Task lastCellHidingProcess = null;
+        List<Section> spawnedSectionsList = LevelBuilder.SpawnedSectionsList;
+
+        for (int i = 0; i < spawnedSectionsList.Count; i++)
+        {
+            Section section = spawnedSectionsList[i].GetComponent<Section>();
+
+            if(section.gameObject.active){
+                lastCellHidingProcess = new Task(section.HideCellsSequence());
+            }
+        }
+
+        yield return new WaitWhile(()=> lastCellHidingProcess.Running);
     }
 }
