@@ -430,7 +430,7 @@ PrefabInstance:
     - target: {fileID: 7881933993445490937, guid: 411fd57b2dc64ae48aabac334a4c26d2, type: 3}
       propertyPath: LevelDataSO
       value: 
-      objectReference: {fileID: 11400000, guid: 4328e6e5f97d8954780a12dfd4b72f93, type: 2}
+      objectReference: {fileID: 11400000, guid: d2e92183ac9503e459f5b5124a362ed9, type: 2}
     - target: {fileID: 7881933993445490937, guid: 411fd57b2dc64ae48aabac334a4c26d2, type: 3}
       propertyPath: cameraObject
       value: 

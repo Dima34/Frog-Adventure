@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public LevelBuilder LevelBuilder;
     [SerializeField]
+    
+    [HideInInspector]
     public GameObject LevelContainer;
 
     public int StartNumber { get => startNumber; }
