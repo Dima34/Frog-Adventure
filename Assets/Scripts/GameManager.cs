@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     int startNumber;
     int increment;
     int iterationCount;
-    int iteration = 0;
+    int iteration;
     Transform playerPrefab;
     Transform startPrefab;
     Transform finishPrefab;
@@ -42,7 +42,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         CreateGameSequence();
+        setDefaultGameStateValues();
         NextSectionNumber();
+    }
+
+    public void setDefaultGameStateValues(){
+        currentNumber = startNumber;
+        iteration = 0;
     }
 
     void setLevelData()
@@ -68,7 +74,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void checkActiveSections()
+    void checkSectionsForActive()
     {
         LevelBuilder.SpawnedSectionsList.ForEach(delegate (Section section)
         {
@@ -87,7 +93,7 @@ public class GameManager : MonoBehaviour
         iteration++;
         currentNumber += increment;
         GlobalEventManager.OnCurrentNumberChange.Fire();
-        checkActiveSections();
+        checkSectionsForActive();
     }
 
     void createLevel(bool fromEditor)
@@ -108,11 +114,6 @@ public class GameManager : MonoBehaviour
         GlobalEventManager.OnLevelBuilded.Fire();
     }
 
-    public void StartRestartSequence()
-    {
-        StartCoroutine(restartLevelSequence());
-    }
-
     public IEnumerator restartLevelSequence(){
         LevelBuilder.HidePlayer();
 
@@ -128,8 +129,7 @@ public class GameManager : MonoBehaviour
     void restartLevel(){
         LevelBuilder.SpawnPlayer();
         LevelBuilder.CreateSections();
-        currentNumber = startNumber;
-        iteration = 0;
+        setDefaultGameStateValues();
         NextSectionNumber();
     }
 

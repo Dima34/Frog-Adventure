@@ -105,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void restartLevel()
     {
-        gameManager.StartRestartSequence();
+        StartCoroutine(gameManager.restartLevelSequence());
     }
 
     void cellUnderFeet()
