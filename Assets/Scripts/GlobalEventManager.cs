@@ -52,4 +52,20 @@ public static class GlobalEventManager
             listenerList?.Invoke(playerObject);
         }
     }
+
+    public static class OnCameraReachedStart{
+        static Action listenerList;
+
+        public static void AddListener(Action listener){
+            listenerList += listener;
+        }
+
+        public static void RemoveListener(Action listener){
+            listenerList -= listener;
+        }
+
+        public static void Fire(){
+            listenerList?.Invoke();
+        }
+    }
 }

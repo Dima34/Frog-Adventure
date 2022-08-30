@@ -24,6 +24,8 @@ public class CameraMovement : MonoBehaviour
     bool isLevelBuilded = false;
     bool isCameraScaled = false;
 
+    public bool IsCameraMooving { get => isCameraMooving;}
+
     private void Awake()
     {
         GetComponent<CameraScaler>().ScaleCamera();
@@ -51,7 +53,7 @@ public class CameraMovement : MonoBehaviour
         cameraInUnitHeight = cameraObject.orthographicSize * 2;
         currentCameraPosition = cameraObject.transform.position;
 
-        setCameraStartPosition();
+        SetCameraStartPosition(true);
     }
 
     void initializeStartNFinish()
@@ -67,9 +69,9 @@ public class CameraMovement : MonoBehaviour
         playerObject = player;
     }
 
-    void setCameraStartPosition()
+    public void SetCameraStartPosition(bool intantMove = false)
     {
-        nextInstantCameraMove = true;
+        nextInstantCameraMove = intantMove;
         currentCameraPosition = cameraObject.transform.position;
         
         Vector2 newCameraPosition = startBottom + (Vector2)(cameraObject.transform.up * (cameraInUnitHeight / 2));
@@ -102,25 +104,25 @@ public class CameraMovement : MonoBehaviour
 
     IEnumerator moveVerticalCoroutine(Camera cameraObject, Vector2 a, Vector2 b, Vector2 finishDeathCorner)
     {
+        Debug.Log("Move vertical called ");
         float aY = a.y;
         float bY = b.y;
         float t = 0;
 
-        while (t <= 1)
+        while (t < 1)
         {
             float finishObjectRelativeY = cameraObject.WorldToViewportPoint(finishDeathCorner).y * cameraInUnitHeight;
 
-            if(finishObjectRelativeY <= cameraInUnitHeight){
+            if(finishObjectRelativeY <= cameraInUnitHeight && t != 0){
                 bY = (finishDeathCorner - (Vector2)(cameraObject.transform.up * (cameraInUnitHeight / 2))).y;
                 nextInstantCameraMove = true;
-            }   
+            }
 
             if (nextInstantCameraMove)
             {
                 t = 1;
                 nextInstantCameraMove = false;
-            }
-            else
+            } else
             {
                 t += Time.deltaTime;
             }
@@ -128,9 +130,12 @@ public class CameraMovement : MonoBehaviour
             float newY = Mathf.Lerp(aY, bY, t);
             cameraObject.transform.position = new Vector3(cameraObject.transform.position.x, newY, -10);
 
+            
+
             yield return null;
         }
 
+        Debug.Log("Moving end.");
         isCameraMooving = false;
     }
 }

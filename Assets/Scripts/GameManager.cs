@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] CameraMovement _camera;
+    
     public LevelData LevelDataSO;
     [HideInInspector]
     public LevelBuilder LevelBuilder;
-    [SerializeField]
-
     [HideInInspector]
     public GameObject LevelContainer;
 
@@ -41,17 +41,18 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        StartGameSequence();
+        CreateGameSequence();
         NextSectionNumber();
     }
 
-    public void StartGameSequence(bool fromEditor = false)
+    public void CreateGameSequence(bool fromEditor = false)
     {
         setLevelData();
         createLevel(fromEditor);
         if(!fromEditor)
             LevelBuilder.SpawnPlayer();
     }
+
 
     void setLevelData()
     {
@@ -107,15 +108,25 @@ public class GameManager : MonoBehaviour
         GlobalEventManager.OnLevelBuilded.Fire();
     }
 
-    public void RestartLevel()
+    public void StartRestartSequence()
     {
-        if (LevelBuilder.SectionsContainer)
-        {
-            LevelBuilder.SpawnedSectionsList.ForEach(delegate (Section section)
-            {
-                StartCoroutine(HideSections());                    
-            });
-        }
+        StartCoroutine(restartLevelSequence());
+    }
+
+    public IEnumerator restartLevelSequence(){
+        LevelBuilder.HidePlayer();
+        Task sectionsHidingRoutine = new Task(HideSections());
+
+        yield return new WaitUntil(() => sectionsHidingRoutine.Running);
+        _camera.SetCameraStartPosition();
+        yield return new WaitWhile(() => _camera.IsCameraMooving);
+
+        restartLevel();
+    }
+
+    void restartLevel(){
+        LevelBuilder.SpawnPlayer();
+        // LevelBuilder.CreateSections();
     }
 
     public IEnumerator HideSections(){
@@ -128,9 +139,16 @@ public class GameManager : MonoBehaviour
 
             if(section.gameObject.active){
                 lastCellHidingProcess = new Task(section.HideCellsSequence());
+                yield return null;
             }
         }
 
         yield return new WaitWhile(()=> lastCellHidingProcess.Running);
+
+        for (int i = 0; i < spawnedSectionsList.Count; i++)
+        {
+            Section section = spawnedSectionsList[i].GetComponent<Section>();
+            Destroy(section.gameObject);
+        }
     }
 }

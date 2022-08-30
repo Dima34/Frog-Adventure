@@ -106,6 +106,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void restartLevel()
+    {
+        gameManager.StartRestartSequence();
+    }
+
     void cellUnderFeet()
     {
         Cell cellScript = collidedObject.transform.GetComponent<Cell>();
@@ -126,11 +131,6 @@ public class PlayerMovement : MonoBehaviour
     {
         transform.position += (Vector3)positionAddition;
         fromPos += (Vector3)positionAddition;
-    }
-
-    void restartLevel()
-    {
-        gameManager.RestartLevel();
     }
 
     void removeCellFollow(Collider2D collidedObject)
