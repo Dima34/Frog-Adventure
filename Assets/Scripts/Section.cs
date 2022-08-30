@@ -13,7 +13,7 @@ public class Section : MonoBehaviour
     [SerializeField] bool willCellsMove = false;
     [SerializeField] float cellMoveSpeed = 30f;
 
-    int ordinalNumber;
+    public int ordinalNumber;
     int startNumber;
     int increment;
     int correctCellIndex;
@@ -96,7 +96,6 @@ public class Section : MonoBehaviour
             if(CellsList[i]){
                 CellAnimation cellAnimation = CellsList[i].GetComponent<CellAnimation>();
                 
-
                 lastHideAnim = new Task(cellAnimation.HideCell());
             }            
         }

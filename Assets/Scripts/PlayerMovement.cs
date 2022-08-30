@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
 
     GameManager gameManager;
     Camera mainCamera;
+    CameraMovement cameraMovement;
     Vector3 fromPos;
     Vector3 toPos;
     Collider2D collidedObject;
@@ -22,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         mainCamera = Camera.main;
+        cameraMovement = mainCamera.GetComponent<CameraMovement>();
         gameManager = GameObject.FindObjectOfType<GameManager>();
     }
 
@@ -32,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleMove()
     {
-        if (Input.GetMouseButtonDown(0) && !_isMoving)
+        if (Input.GetMouseButtonDown(0) && !_isMoving && !cameraMovement.IsCameraMooving)
         {
             Vector3 pointToMove = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             pointToMove.z = 0;
@@ -45,14 +47,14 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(MovePlayerSequence(from, to));
     }
 
-    IEnumerator MovePlayerSequence(Vector3 from, Vector3 to)
+    public IEnumerator MovePlayerSequence(Vector3 from, Vector3 to)
     {
         fromPos = from;
         toPos = to;
         _isMoving = true;
         float t = 0;
 
-        startMoveAnimationSequence();
+        StartCoroutine("handleAnimationTimeChange");
 
         while (t < _movementTime)
         {
@@ -63,11 +65,6 @@ public class PlayerMovement : MonoBehaviour
 
         _isMoving = false;
         checkUnderFeet();
-    }
-
-    void startMoveAnimationSequence()
-    {
-        StartCoroutine("handleAnimationTimeChange");
     }
 
     IEnumerator handleAnimationTimeChange()

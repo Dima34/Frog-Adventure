@@ -6,7 +6,8 @@ using System;
 [RequireComponent(typeof(CameraScaler))]
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] GameManager gameManager;
+    [SerializeField] GameManager _gameManager;
+    [SerializeField] float _cameraMoveSpeed = 20f;
 
     CameraScaler cameraScaler;
     Camera cameraObject;
@@ -44,7 +45,7 @@ public class CameraMovement : MonoBehaviour
     {
         initializeStartNFinish();
         initializeCamera();
-        levelContainer = gameManager.LevelContainer;
+        levelContainer = _gameManager.LevelContainer;
     }
 
     void initializeCamera()
@@ -58,8 +59,8 @@ public class CameraMovement : MonoBehaviour
 
     void initializeStartNFinish()
     {
-        startObject = gameManager.LevelBuilder.StartObject;
-        finishObject = gameManager.LevelBuilder.FinishObject;
+        startObject = _gameManager.LevelBuilder.StartObject;
+        finishObject = _gameManager.LevelBuilder.FinishObject;
 
         finishTop = finishObject.position - (-finishObject.up * (finishObject.localScale.y / 2));
         startBottom = startObject.position - (startObject.up * (startObject.localScale.y / 2));
@@ -104,7 +105,6 @@ public class CameraMovement : MonoBehaviour
 
     IEnumerator moveVerticalCoroutine(Camera cameraObject, Vector2 a, Vector2 b, Vector2 finishDeathCorner)
     {
-        Debug.Log("Move vertical called ");
         float aY = a.y;
         float bY = b.y;
         float t = 0;
@@ -124,18 +124,15 @@ public class CameraMovement : MonoBehaviour
                 nextInstantCameraMove = false;
             } else
             {
-                t += Time.deltaTime;
+                t += (_cameraMoveSpeed / 10) * Time.deltaTime;
             }
 
             float newY = Mathf.Lerp(aY, bY, t);
             cameraObject.transform.position = new Vector3(cameraObject.transform.position.x, newY, -10);
 
-            
-
             yield return null;
         }
 
-        Debug.Log("Moving end.");
         isCameraMooving = false;
     }
 }

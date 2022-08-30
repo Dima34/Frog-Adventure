@@ -45,15 +45,6 @@ public class GameManager : MonoBehaviour
         NextSectionNumber();
     }
 
-    public void CreateGameSequence(bool fromEditor = false)
-    {
-        setLevelData();
-        createLevel(fromEditor);
-        if(!fromEditor)
-            LevelBuilder.SpawnPlayer();
-    }
-
-
     void setLevelData()
     {
         startNumber = LevelDataSO.StartNumber;
@@ -67,7 +58,17 @@ public class GameManager : MonoBehaviour
         propGaps = LevelDataSO.PropGaps;
     }
 
-    void checkSections()
+    public void CreateGameSequence(bool fromEditor = false)
+    {
+        setLevelData();
+        createLevel(fromEditor);
+        if(!fromEditor){
+            LevelBuilder.CreatePlayer();
+            LevelBuilder.SpawnPlayer();
+        }
+    }
+
+    void checkActiveSections()
     {
         LevelBuilder.SpawnedSectionsList.ForEach(delegate (Section section)
         {
@@ -86,7 +87,7 @@ public class GameManager : MonoBehaviour
         iteration++;
         currentNumber += increment;
         GlobalEventManager.OnCurrentNumberChange.Fire();
-        checkSections();
+        checkActiveSections();
     }
 
     void createLevel(bool fromEditor)
@@ -103,7 +104,6 @@ public class GameManager : MonoBehaviour
 
         LevelBuilder = new LevelBuilder(this, LevelContainer.transform);
         LevelBuilder.BuildLevel(fromEditor);
-        LevelBuilder.CreatePlayer();
 
         GlobalEventManager.OnLevelBuilded.Fire();
     }
@@ -115,23 +115,27 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator restartLevelSequence(){
         LevelBuilder.HidePlayer();
-        Task sectionsHidingRoutine = new Task(HideSections());
 
-        yield return new WaitUntil(() => sectionsHidingRoutine.Running);
+        Task sectionsHidingRoutine = new Task(HideSections());
+        
         _camera.SetCameraStartPosition();
         yield return new WaitWhile(() => _camera.IsCameraMooving);
+        yield return new WaitWhile(() => sectionsHidingRoutine.Running);
 
         restartLevel();
     }
 
     void restartLevel(){
         LevelBuilder.SpawnPlayer();
-        // LevelBuilder.CreateSections();
+        LevelBuilder.CreateSections();
+        currentNumber = startNumber;
+        iteration = 0;
+        NextSectionNumber();
     }
 
     public IEnumerator HideSections(){
-        Task lastCellHidingProcess = null;
         List<Section> spawnedSectionsList = LevelBuilder.SpawnedSectionsList;
+        Task lastCellHidingProcess = null;
 
         for (int i = 0; i < spawnedSectionsList.Count; i++)
         {
@@ -144,11 +148,13 @@ public class GameManager : MonoBehaviour
         }
 
         yield return new WaitWhile(()=> lastCellHidingProcess.Running);
+        yield return null;
 
         for (int i = 0; i < spawnedSectionsList.Count; i++)
         {
             Section section = spawnedSectionsList[i].GetComponent<Section>();
-            Destroy(section.gameObject);
+            
+            section.gameObject.SetActive(false);
         }
     }
 }

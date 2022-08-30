@@ -16,12 +16,13 @@ public class LevelBuilder
     Cell cellPrefab;
     float propGaps;
     Vector3 levelDirection;
+    Transform playerObject;
 
     public GameObject SectionsContainer;
     public Transform StartObject;
     public Transform FinishObject;
-    public Transform PlayerObject;
     public List<Section> SpawnedSectionsList { get => spawnedSectionsList; }
+    public Transform PlayerObject { get => playerObject;}
 
     public LevelBuilder(
         GameManager gameManager,
@@ -94,14 +95,18 @@ public class LevelBuilder
     public void CreatePlayer()
     {
         // Teleport player on start plate
-        PlayerObject = Object.Instantiate(playerPrefab, new Vector3(0,0,-10), parentObject.rotation);
-        PlayerObject.SetParent(parentObject);
+        playerObject = Object.Instantiate(playerPrefab, new Vector3(0,0,-10), parentObject.rotation);
+        playerObject.SetParent(parentObject);
 
-        GlobalEventManager.OnPlayerCreated.Fire(PlayerObject);
+        // Disable movement
+        playerObject.GetComponent<PlayerMovement>().enabled = false;
+
+        GlobalEventManager.OnPlayerCreated.Fire(playerObject);
     }
 
     public void HidePlayer(){
-        PlayerObject.position = new Vector3(0,0,-10);
+        playerObject.position = new Vector3(0,0,-10);
+        playerObject.GetComponent<PlayerMovement>().enabled = false;
     }
 
     public void SpawnPlayer(){
@@ -114,5 +119,6 @@ public class LevelBuilder
         PlayerMovement playerMovement = PlayerObject.GetComponent<PlayerMovement>();
 
         playerMovement.MovePlayer(PlayerObject.position, StartObject.position);
+        playerObject.GetComponent<PlayerMovement>().enabled = true;
     }
 }
