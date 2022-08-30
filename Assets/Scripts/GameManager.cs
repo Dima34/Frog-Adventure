@@ -23,7 +23,10 @@ public class GameManager : MonoBehaviour
     public Cell CellPrefab { get => cellPrefab; }
     public float PropGaps { get => propGaps; }
     public int CurrentNumber { get => currentNumber; }
-
+    public float SectionSideMarginSize { get => sectionSideMarginSize; }
+    public int CellInSectionAmount { get => cellInSectionAmount; }
+    public bool WillCellsMove { get => willCellsMove; }
+    public float CellMoveSpeed { get => cellMoveSpeed; }
 
     int startNumber;
     int increment;
@@ -35,6 +38,10 @@ public class GameManager : MonoBehaviour
     Section sectionPrefab;
     Cell cellPrefab;
     float propGaps;
+    float sectionSideMarginSize;
+    int cellInSectionAmount;
+    bool willCellsMove;
+    float cellMoveSpeed;
 
 
     int currentNumber;
@@ -62,6 +69,10 @@ public class GameManager : MonoBehaviour
         sectionPrefab = LevelDataSO.Section;
         cellPrefab = LevelDataSO.Cell;
         propGaps = LevelDataSO.PropGaps;
+        sectionSideMarginSize = LevelDataSO.SectionSideMarginSize;
+        cellInSectionAmount = LevelDataSO.CellInSectionAmount;
+        willCellsMove = LevelDataSO.WillCellsMove;
+        cellMoveSpeed = LevelDataSO.CellMoveSpeed;
     }
 
     public void CreateGameSequence(bool fromEditor = false)

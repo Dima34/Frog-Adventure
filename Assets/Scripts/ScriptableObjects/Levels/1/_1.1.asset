@@ -21,3 +21,7 @@ MonoBehaviour:
   Section: {fileID: 6559451546653941062, guid: 23667c6d1baace64691e8f48c19de63d, type: 3}
   Cell: {fileID: 5219142901616382254, guid: 084cab433549f0042af155d841647801, type: 3}
   PropGaps: 20
+  CellsInSection: 3
+  SideCellMarginSize: 2
+  WillCellsMove: 1
+  CellMoveSpeed: 30

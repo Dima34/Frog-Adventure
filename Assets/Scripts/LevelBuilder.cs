@@ -13,10 +13,15 @@ public class LevelBuilder
     Transform finishPrefab;
     Section sectionPrefab;
     List<Section> spawnedSectionsList;
+    float sectionSideMarginSize;
+    int cellInSectionAmount;
+    bool willCellsMove;
+    float cellMoveSpeed;
     Cell cellPrefab;
     float propGaps;
     Vector3 levelDirection;
     Transform playerObject;
+    
 
     public GameObject SectionsContainer;
     public Transform StartObject;
@@ -37,6 +42,10 @@ public class LevelBuilder
         startPrefab = gameManager.StartPrefab;
         finishPrefab = gameManager.FinishPrefab;
         sectionPrefab = gameManager.SectionPrefab;
+        sectionSideMarginSize = gameManager.SectionSideMarginSize;
+        cellInSectionAmount = gameManager.CellInSectionAmount;
+        willCellsMove = gameManager.WillCellsMove;
+        cellMoveSpeed = gameManager.CellMoveSpeed;
         cellPrefab = gameManager.CellPrefab;
         propGaps = gameManager.PropGaps;
         levelDirection = parentObject.localRotation * Vector3.up;
@@ -80,7 +89,15 @@ public class LevelBuilder
 
             Section sectionScript = section.GetComponent<Section>();
             // Setup section
-            sectionScript.SetUp(startNumber, increment, i);
+            sectionScript.SetUp(
+                startNumber, 
+                increment, 
+                i,
+                sectionSideMarginSize,
+                cellInSectionAmount,
+                willCellsMove,
+                cellMoveSpeed              
+            );
             // Trigger cell spawn
             sectionScript.SpawnCells(cellPrefab);
             // Add section to spawned sections list
