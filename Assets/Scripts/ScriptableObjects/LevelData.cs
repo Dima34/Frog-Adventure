@@ -3,22 +3,25 @@ using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "LevelData", menuName = "New LevelData", order = 51)]
 public class LevelData : ScriptableObject {
-    public int StartNumber = 0;
-    public int Increment = 1;
-    public int IterationCount = 10;
-    public Transform Player;
-    public Transform StartPrefab;
-    public Transform FinishPrefab;
+    [SerializeField] public int StartNumber = 0;
+    [SerializeField] public int Increment = 1;
+    [SerializeField] public int IterationCount = 10;
+    [SerializeField] public Transform PlayerPrefab;
+    [SerializeField] public Transform StartPrefab;
+    [SerializeField] public Transform FinishPrefab;
+    [SerializeField] public bool Enemies;
 
-    [Header("Section settings")]
-    public Section Section;
-    public Cell Cell;
-    public float PropGaps = 20;
-    public int CellInSectionAmount = 3;
-    public float SectionSideMarginSize = 2f;
-    public bool WillCellsMove = false;
-    public float CellMoveSpeed = 30f;
+    // Section settings
+    [SerializeField] public Section SectionPrefab;
+    [SerializeField] public Cell CellPrefab;
+    [SerializeField] public float PropGaps = 20;
+    [SerializeField] public int CellInSectionAmount = 3;
+    [SerializeField] public float SectionSideMarginSize = 2f;
+    [SerializeField] public bool WillCellsMove = false;
+    [SerializeField] public float CellMoveSpeed = 30f;
 
-    [Header("Enemy settings")]
-    List<Enemy> EnemyList;
+    // Enemy settings
+    [SerializeField] public Enemy EnemyPrefab;
+    [SerializeField] public List<bool> SectionsWithEnemies = new List<bool>();
+
 }

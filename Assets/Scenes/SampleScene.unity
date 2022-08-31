@@ -1122,10 +1122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 3
 --- !u!212 &220070263
 SpriteRenderer:
@@ -1470,10 +1466,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 1
 --- !u!212 &287236948
 SpriteRenderer:
@@ -1777,10 +1769,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 8
 --- !u!212 &365455693
 SpriteRenderer:
@@ -2055,10 +2043,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 9
 --- !u!212 &420516121
 SpriteRenderer:
@@ -6085,10 +6069,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 10
 --- !u!212 &917734662
 SpriteRenderer:
@@ -6616,10 +6596,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 5
 --- !u!212 &958018696
 SpriteRenderer:
@@ -9068,10 +9044,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 6
 --- !u!212 &1419288829
 SpriteRenderer:
@@ -9929,10 +9901,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 4
 --- !u!212 &1623047274
 SpriteRenderer:
@@ -11688,10 +11656,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 2
 --- !u!212 &1886637733
 SpriteRenderer:
@@ -12282,10 +12246,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
   ordinalNumber: 7
 --- !u!212 &1975139601
 SpriteRenderer:

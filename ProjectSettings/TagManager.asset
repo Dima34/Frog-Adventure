@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Start
   - Cell
+  - Enemy
   layers:
   - Default
   - TransparentFX

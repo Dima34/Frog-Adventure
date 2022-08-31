@@ -42,6 +42,9 @@ public class GameManager : MonoBehaviour
     int cellInSectionAmount;
     bool willCellsMove;
     float cellMoveSpeed;
+    bool enemies;
+    Enemy enemyPrefab;
+    List<bool> sectionsWithEnemies;
 
 
     int currentNumber;
@@ -63,16 +66,19 @@ public class GameManager : MonoBehaviour
         startNumber = LevelDataSO.StartNumber;
         increment = LevelDataSO.Increment;
         iterationCount = LevelDataSO.IterationCount;
-        playerPrefab = LevelDataSO.Player;
+        playerPrefab = LevelDataSO.PlayerPrefab;
         startPrefab = LevelDataSO.StartPrefab;
         finishPrefab = LevelDataSO.FinishPrefab;
-        sectionPrefab = LevelDataSO.Section;
-        cellPrefab = LevelDataSO.Cell;
+        sectionPrefab = LevelDataSO.SectionPrefab;
+        cellPrefab = LevelDataSO.CellPrefab;
         propGaps = LevelDataSO.PropGaps;
         sectionSideMarginSize = LevelDataSO.SectionSideMarginSize;
         cellInSectionAmount = LevelDataSO.CellInSectionAmount;
         willCellsMove = LevelDataSO.WillCellsMove;
         cellMoveSpeed = LevelDataSO.CellMoveSpeed;
+        enemies = LevelDataSO.Enemies; 
+        enemyPrefab = LevelDataSO.EnemyPrefab;
+        sectionsWithEnemies = LevelDataSO.SectionsWithEnemies;
     }
 
     public void CreateGameSequence(bool fromEditor = false)
