@@ -38,21 +38,12 @@ public class Section : MonoBehaviour
         this.cellMoveSpeed = cellMoveSpeed;
     }
 
-    float calcMarginIncludedSize(Cell cell){
-        // Find cell half size
-        float cellHalfSize = cell.transform.localScale.x / 2;
-        // Find one side margin which includes margins and cell half (because when we spawn we specify the center coords. We need that to create cells on side and don`t calculate the half + center coords each time)
-        float sideMargin = cellHalfSize + sideMarginSize;
-        // Calculate section width includes margin
-        return transform.localScale.x - sideMargin * 2;
-    }
-
     public void SpawnCells(Cell cell)
     {
         if (cellAmount < 1) cellAmount = 1;
         cellsList = new List<Cell>();
 
-        float includedSectionWidth = calcMarginIncludedSize(cell);
+        float includedSectionWidth = Utils.CalcMarginIncludedSize(cell, transform.localScale.x, sideMarginSize);
         // Calctulate gaps between cells
         float cellGap = includedSectionWidth / (cellAmount == 1 ? cellAmount : (cellAmount - 1));
         // Get section horizontal vector from center to left
@@ -95,10 +86,6 @@ public class Section : MonoBehaviour
         }
     }
 
-    public void HideCells(){
-        
-    }
-
     public IEnumerator HideCellsSequence(){
         Task lastHideAnim = null;
 
@@ -124,7 +111,12 @@ public class Section : MonoBehaviour
         for (int i = 0; i < cellsList.Count; i++)
         {
             if(i != correctCellIndex){
-                GameObject.Destroy(cellsList[i].gameObject);
+                Cell currentCell = cellsList[i];
+                Task cellHiding = new Task(currentCell.GetComponent<CellAnimation>().HideCell());
+                
+                cellHiding.Finished+=(bool isfinished)=>{
+                    Destroy(currentCell.gameObject);
+                };
             } else if(willCellsMove){
                 StartCellMoveSequence(cellsList[i]);
             }
@@ -132,7 +124,7 @@ public class Section : MonoBehaviour
     }
 
     public void StartCellMoveSequence(Cell cell){
-        float moveWayLength = calcMarginIncludedSize(cell) - cell.transform.lossyScale.x;
+        float moveWayLength = Utils.CalcMarginIncludedSize(cell, transform.localScale.x, sideMarginSize) - cell.transform.lossyScale.x;
         Vector2 leftPoint = transform.position - (transform.right * moveWayLength / 2);
         Vector2 rightPoint = transform.position + (transform.right * moveWayLength / 2);
 

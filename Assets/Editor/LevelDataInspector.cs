@@ -85,10 +85,11 @@ public class LevelDataInspector : Editor {
             if(sectionsWithEnemies.arraySize != iterationCount.intValue){
                 int sizeDiff = iterationCount.intValue - sectionsWithEnemies.arraySize;
                 sectionsWithEnemies.arraySize += sizeDiff;
+                Debug.Log("array size" + sectionsWithEnemies.arraySize );
             }
 
             EditorGUI.indentLevel = 1;
-            for (int i = sectionsWithEnemies.arraySize - 1; i > 0; i--)
+            for (int i = sectionsWithEnemies.arraySize - 1; i >= 0; i--)
             {
                 SerializedProperty element = sectionsWithEnemies.GetArrayElementAtIndex(i);
 

@@ -27,11 +27,12 @@ public class GameManager : MonoBehaviour
     public int CellInSectionAmount { get => cellInSectionAmount; }
     public bool WillCellsMove { get => willCellsMove; }
     public float CellMoveSpeed { get => cellMoveSpeed; }
+    public Enemy EnemyPrefab { get => enemyPrefab; }
 
     int startNumber;
     int increment;
     int iterationCount;
-    int iteration;
+    int currentStep;
     Transform playerPrefab;
     Transform startPrefab;
     Transform finishPrefab;
@@ -51,6 +52,14 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        SetLevelData();
+        
+        GlobalEventManager.OnCurrentNumberChange.AddListener(checkSectionsForActive);
+        if(enemies){
+            calcEnemySpawnBounds();
+            GlobalEventManager.OnCurrentNumberChange.AddListener(checkForEnemies);
+        }
+        
         CreateGameSequence();
         setDefaultGameStateValues();
         NextSectionNumber();
@@ -58,10 +67,10 @@ public class GameManager : MonoBehaviour
 
     public void setDefaultGameStateValues(){
         currentNumber = startNumber;
-        iteration = 0;
+        currentStep = 0;
     }
 
-    void setLevelData()
+    public void SetLevelData()
     {
         startNumber = LevelDataSO.StartNumber;
         increment = LevelDataSO.Increment;
@@ -83,7 +92,6 @@ public class GameManager : MonoBehaviour
 
     public void CreateGameSequence(bool fromEditor = false)
     {
-        setLevelData();
         createLevel(fromEditor);
         if(!fromEditor){
             LevelBuilder.CreatePlayer();
@@ -95,7 +103,7 @@ public class GameManager : MonoBehaviour
     {
         LevelBuilder.SpawnedSectionsList.ForEach(delegate (Section section)
         {
-            if (section.OrdinalNumber == iteration)
+            if (section.OrdinalNumber == currentStep)
             {
                 section.gameObject.SetActive(true);
             }
@@ -107,10 +115,9 @@ public class GameManager : MonoBehaviour
         if (currentNumber != 0)
             LevelBuilder.SpawnedSectionsList[currentNumber - 1].LeaveCorrectCell();
 
-        iteration++;
+        currentStep++;
         currentNumber += increment;
         GlobalEventManager.OnCurrentNumberChange.Fire();
-        checkSectionsForActive();
     }
 
     void createLevel(bool fromEditor)
@@ -172,6 +179,12 @@ public class GameManager : MonoBehaviour
             Section section = spawnedSectionsList[i].GetComponent<Section>();
             
             section.gameObject.SetActive(false);
+        }
+    }
+
+    void checkForEnemies(){
+        if(sectionsWithEnemies[currentStep - 1]){
+            
         }
     }
 }

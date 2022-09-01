@@ -13043,7 +13043,7 @@ PrefabInstance:
       objectReference: {fileID: 1233093149}
     - target: {fileID: 2955654787849499613, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
       propertyPath: _cameraMoveSpeed
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2955654787849499614, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
       propertyPath: m_Enabled
