@@ -48,12 +48,12 @@ public static class Utils
         return number;
     }
 
-    public static float CalcMarginIncludedSize(Cell cell,float width, float sideMarginSize){
+    public static float CalcMarginIncludedSize(Cell cell,float sectionWidth, float sideMarginSize){
         // Find cell half size
         float cellHalfSize = cell.transform.localScale.x / 2;
         // Find one side margin which includes margins and cell half (because when we spawn we specify the center coords. We need that to create cells on side and don`t calculate the half + center coords each time)
         float sideMargin = cellHalfSize + sideMarginSize;
         // Calculate section width includes margin
-        return width - sideMargin * 2;
+        return sectionWidth - sideMargin * 2;
     }
 }

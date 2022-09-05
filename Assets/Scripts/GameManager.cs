@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public bool WillCellsMove { get => willCellsMove; }
     public float CellMoveSpeed { get => cellMoveSpeed; }
     public Enemy EnemyPrefab { get => enemyPrefab; }
+    public CameraMovement CameraMovement { get => cameraMovement;}
 
     int startNumber;
     int increment;
@@ -46,6 +47,8 @@ public class GameManager : MonoBehaviour
     bool enemies;
     Enemy enemyPrefab;
     List<bool> sectionsWithEnemies;
+    EnemySpawner enemySpawner;
+    CameraMovement cameraMovement;
 
 
     int currentNumber;
@@ -56,13 +59,19 @@ public class GameManager : MonoBehaviour
         
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkSectionsForActive);
         if(enemies){
-            calcEnemySpawnBounds();
+            enemySpawner = new EnemySpawner(this);
             GlobalEventManager.OnCurrentNumberChange.AddListener(checkForEnemies);
         }
         
         CreateGameSequence();
         setDefaultGameStateValues();
         NextSectionNumber();
+    }
+
+    private void Update() {
+        if(Input.GetMouseButtonDown(0)){
+            Debug.Log(Input.mousePosition);
+        }
     }
 
     public void setDefaultGameStateValues(){
@@ -88,6 +97,7 @@ public class GameManager : MonoBehaviour
         enemies = LevelDataSO.Enemies; 
         enemyPrefab = LevelDataSO.EnemyPrefab;
         sectionsWithEnemies = LevelDataSO.SectionsWithEnemies;
+        cameraMovement = _camera.GetComponent<CameraMovement>();
     }
 
     public void CreateGameSequence(bool fromEditor = false)
@@ -184,7 +194,14 @@ public class GameManager : MonoBehaviour
 
     void checkForEnemies(){
         if(sectionsWithEnemies[currentStep - 1]){
-            
+            StartCoroutine(spawnEnemy());
         }
+    }
+
+    IEnumerator spawnEnemy(){
+        Debug.Log("Start waiting");
+        yield return new WaitWhile(()=>CameraMovement.IsCameraMooving);
+        enemySpawner.SpawnEnemy(this.transform);
+        Debug.Log("End waiting, spawn...");
     }
 }

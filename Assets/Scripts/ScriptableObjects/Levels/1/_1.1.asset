@@ -27,4 +27,4 @@ MonoBehaviour:
   WillCellsMove: 1
   CellMoveSpeed: 30
   EnemyPrefab: {fileID: 6593064610127327743, guid: 7e70530f09ef8fb46a161ec2bed1cb5a, type: 3}
-  SectionsWithEnemies: 0100010000000000000001
+  SectionsWithEnemies: 0101010101010101010101

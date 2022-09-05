@@ -51,6 +51,11 @@ public class Section : MonoBehaviour
         // Get margin included left side coords
         Vector3 marginIncludedLeftPoint = transform.position + (localLeftVector * (includedSectionWidth / 2));
 
+        // Debug.Log("Cells ------");
+        // Debug.Log("includedSectionWidth " + includedSectionWidth);
+        // Debug.Log("cellGap " + cellGap);
+        // Debug.Log("marginIncludedLeftPoint " + marginIncludedLeftPoint);
+
         // Get random correct cell posistion
         correctCellIndex = Random.Range(0, cellAmount);
         // Calculate correct number value;
