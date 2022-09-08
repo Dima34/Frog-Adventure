@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] CameraMovement _camera;
-    
     public LevelData LevelDataSO;
     [HideInInspector]
     public LevelBuilder LevelBuilder;
     [HideInInspector]
     public GameObject LevelContainer;
+
+    [SerializeField] Camera _camera;
 
     public int StartNumber { get => startNumber; }
     public int Increment { get => increment; }
@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public float CellMoveSpeed { get => cellMoveSpeed; }
     public Enemy EnemyPrefab { get => enemyPrefab; }
     public CameraMovement CameraMovement { get => cameraMovement;}
+    public float EnemyMovementSpeed { get => enemyMovementSpeed; }
 
     int startNumber;
     int increment;
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
     float cellMoveSpeed;
     bool enemies;
     Enemy enemyPrefab;
+    float enemyMovementSpeed;
     List<bool> sectionsWithEnemies;
     EnemySpawner enemySpawner;
     CameraMovement cameraMovement;
@@ -66,12 +68,6 @@ public class GameManager : MonoBehaviour
         CreateGameSequence();
         setDefaultGameStateValues();
         NextSectionNumber();
-    }
-
-    private void Update() {
-        if(Input.GetMouseButtonDown(0)){
-            Debug.Log(Input.mousePosition);
-        }
     }
 
     public void setDefaultGameStateValues(){
@@ -96,6 +92,7 @@ public class GameManager : MonoBehaviour
         cellMoveSpeed = LevelDataSO.CellMoveSpeed;
         enemies = LevelDataSO.Enemies; 
         enemyPrefab = LevelDataSO.EnemyPrefab;
+        enemyMovementSpeed = LevelDataSO.EnemyMovementSpeed;
         sectionsWithEnemies = LevelDataSO.SectionsWithEnemies;
         cameraMovement = _camera.GetComponent<CameraMovement>();
     }
@@ -153,8 +150,8 @@ public class GameManager : MonoBehaviour
 
         Task sectionsHidingRoutine = new Task(HideSections());
         
-        _camera.SetCameraStartPosition();
-        yield return new WaitWhile(() => _camera.IsCameraMooving);
+        cameraMovement.SetCameraStartPosition();
+        yield return new WaitWhile(() => cameraMovement.IsCameraMooving);
         yield return new WaitWhile(() => sectionsHidingRoutine.Running);
 
         restartLevel();
@@ -194,14 +191,14 @@ public class GameManager : MonoBehaviour
 
     void checkForEnemies(){
         if(sectionsWithEnemies[currentStep - 1]){
-            StartCoroutine(spawnEnemy());
+            StartCoroutine(enemySpawnProcess());
         }
     }
 
-    IEnumerator spawnEnemy(){
-        Debug.Log("Start waiting");
+    IEnumerator enemySpawnProcess(){
         yield return new WaitWhile(()=>CameraMovement.IsCameraMooving);
-        enemySpawner.SpawnEnemy(this.transform);
-        Debug.Log("End waiting, spawn...");
+        
+        Vector3 moveToPoint = _camera.ViewportToWorldPoint(new Vector3(0.5f,0,0));
+        enemySpawner.EnemyLifeCycleSequence(this.transform,moveToPoint);
     }
 }

@@ -6406,6 +6406,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!20 &942934180 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2955654787849499427, guid: 1521a27f0933ca54a833b7e5176e05a2, type: 3}
+  m_PrefabInstance: {fileID: 2955654787951364956}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &953233446
 GameObject:
   m_ObjectHideFlags: 0
@@ -13085,7 +13090,7 @@ PrefabInstance:
     - target: {fileID: 7881933993445490937, guid: 411fd57b2dc64ae48aabac334a4c26d2, type: 3}
       propertyPath: _camera
       value: 
-      objectReference: {fileID: 519420033}
+      objectReference: {fileID: 942934180}
     - target: {fileID: 7881933993445490937, guid: 411fd57b2dc64ae48aabac334a4c26d2, type: 3}
       propertyPath: LevelDataSO
       value: 

@@ -22,6 +22,7 @@ public class LevelData : ScriptableObject {
 
     // Enemy settings
     [SerializeField] public Enemy EnemyPrefab;
+    [SerializeField] public float EnemyMovementSpeed;
     [SerializeField] public List<bool> SectionsWithEnemies = new List<bool>();
 
 }

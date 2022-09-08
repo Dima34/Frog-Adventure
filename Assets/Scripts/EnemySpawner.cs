@@ -14,6 +14,7 @@ public class EnemySpawner
     Vector3 localLeftVector;
     Vector3 marginIncludedLeftPoint;
     GameManager gameManager;
+    float enemySpeed;
     Camera camera;
     
     public EnemySpawner(GameManager gameManager){
@@ -24,6 +25,7 @@ public class EnemySpawner
         sectionPrefab = gameManager.SectionPrefab;
         sideMarginSize = gameManager.SectionSideMarginSize;
         camera = Camera.main;
+        enemySpeed = gameManager.EnemyMovementSpeed;
     }
     
     void calcEnemySpawnBounds(Transform spawnPoint){
@@ -36,15 +38,26 @@ public class EnemySpawner
         marginIncludedLeftPoint = spawnPoint.position + (localLeftVector * (includedSectionWidth / 2));
     }
 
-    public void SpawnEnemy(Transform spawnPointCenter){
-        calcEnemySpawnBounds(spawnPointCenter);
-        float spawnLineNumber = Random.Range(1, cellAmount + 1);
+    Enemy spawnEnemy(Transform levelCenterPoint){
+        calcEnemySpawnBounds(levelCenterPoint);
 
+        float spawnLineNumber = Random.Range(1, cellAmount + 1);
         float xSpawnPoint = marginIncludedLeftPoint.x + (spawnPointsGap * spawnLineNumber);
         float ySpawnPoint = camera.ViewportToWorldPoint(new Vector3(1,1,0)).y;
 
-        Debug.Log(ySpawnPoint);
+        return Object.Instantiate(enemyPrefab, new Vector3(xSpawnPoint, ySpawnPoint + enemyPrefab.transform.localScale.y, 10),gameManager.transform.rotation);
+    }
 
-        Object.Instantiate(enemyPrefab, new Vector3(xSpawnPoint, ySpawnPoint, 10),gameManager.transform.rotation);
+    public void EnemyLifeCycleSequence(
+        Transform levelCenterPoint,
+        Vector3 moveToPoint
+    ){
+        Enemy enemy = spawnEnemy(levelCenterPoint);
+        enemy.MovementSpeed = enemySpeed;
+
+        Task movingProcess = new Task(enemy.MoveTo(moveToPoint));
+        movingProcess.Finished += delegate(bool manual){
+            Object.Destroy(enemy.gameObject);
+        };
     }
 }

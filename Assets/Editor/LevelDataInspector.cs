@@ -3,7 +3,7 @@ using UnityEditor;
 
 [CustomEditor(typeof(LevelData))]
 public class LevelDataInspector : Editor {
-        SerializedProperty startNumber;
+    SerializedProperty startNumber;
     SerializedProperty increment;
     SerializedProperty iterationCount;
     SerializedProperty playerPrefab;
@@ -18,6 +18,7 @@ public class LevelDataInspector : Editor {
     SerializedProperty willCellsMove;
     SerializedProperty cellMoveSpeed;
     SerializedProperty enemyPrefab;
+    SerializedProperty enemyMovementSpeed;
     SerializedProperty sectionsWithEnemies;
 
     GUIStyle headingStyle;
@@ -38,9 +39,8 @@ public class LevelDataInspector : Editor {
         willCellsMove = serializedObject.FindProperty("WillCellsMove");
         cellMoveSpeed = serializedObject.FindProperty("CellMoveSpeed");
         enemyPrefab = serializedObject.FindProperty("EnemyPrefab");
+        enemyMovementSpeed = serializedObject.FindProperty("EnemyMovementSpeed");
         sectionsWithEnemies = serializedObject.FindProperty("SectionsWithEnemies");
-    
-        
     }
 
     public override void OnInspectorGUI() {
@@ -80,6 +80,7 @@ public class LevelDataInspector : Editor {
             EditorGUILayout.LabelField("Enemy", headingStyle);
             EditorGUILayout.Space(10);
             EditorGUILayout.ObjectField(enemyPrefab, typeof(Enemy));
+            EditorGUILayout.PropertyField(enemyMovementSpeed);
             EditorGUILayout.LabelField("Enemies on section");
 
             if(sectionsWithEnemies.arraySize != iterationCount.intValue){
