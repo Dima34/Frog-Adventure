@@ -16,6 +16,7 @@ public class EnemySpawner
     GameManager gameManager;
     float enemySpeed;
     Camera camera;
+    List<Enemy> existingEmenyList = new List<Enemy>();
     
     public EnemySpawner(GameManager gameManager){
         this.gameManager = gameManager;
@@ -45,19 +46,26 @@ public class EnemySpawner
         float xSpawnPoint = marginIncludedLeftPoint.x + (spawnPointsGap * spawnLineNumber);
         float ySpawnPoint = camera.ViewportToWorldPoint(new Vector3(1,1,0)).y;
 
-        return Object.Instantiate(enemyPrefab, new Vector3(xSpawnPoint, ySpawnPoint + enemyPrefab.transform.localScale.y, 10),gameManager.transform.rotation);
+        Enemy enemy = Object.Instantiate(
+            enemyPrefab, 
+            new Vector3(xSpawnPoint, ySpawnPoint + enemyPrefab.transform.localScale.y, 10),
+            gameManager.transform.rotation
+        );
+        if(enemySpeed == 0)
+            Debug.LogError("Warning! Enemy speed = 0");
+        enemy.MovementSpeed = enemySpeed;
+        existingEmenyList.Add(enemy);
+        return enemy;
     }
 
-    public void EnemyLifeCycleSequence(
+    public IEnumerator EnemyLifeCycleSequence(
         Transform levelCenterPoint,
         Vector3 moveToPoint
     ){
         Enemy enemy = spawnEnemy(levelCenterPoint);
-        enemy.MovementSpeed = enemySpeed;
 
-        Task movingProcess = new Task(enemy.MoveTo(moveToPoint));
-        movingProcess.Finished += delegate(bool manual){
-            Object.Destroy(enemy.gameObject);
-        };
+        yield return enemy.StartCoroutine(enemy.MoveTo(moveToPoint));
+        
+        Object.Destroy(enemy.gameObject);
     }
 }

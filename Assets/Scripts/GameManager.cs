@@ -199,6 +199,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitWhile(()=>CameraMovement.IsCameraMooving);
         
         Vector3 moveToPoint = _camera.ViewportToWorldPoint(new Vector3(0.5f,0,0));
-        enemySpawner.EnemyLifeCycleSequence(this.transform,moveToPoint);
+        StartCoroutine(enemySpawner.EnemyLifeCycleSequence(this.transform,moveToPoint));
     }
 }

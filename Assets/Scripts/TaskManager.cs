@@ -160,6 +160,7 @@ class TaskManager : MonoBehaviour
 			yield return null;
 			IEnumerator e = coroutine;
 			while(running) {
+
 				if(paused)
 					yield return null;
 				else {

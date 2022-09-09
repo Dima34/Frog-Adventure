@@ -9,6 +9,8 @@ using System;
 [Serializable]
 public class Enemy : MonoBehaviour
 {
+    bool collidedWithPlayer = false;
+
     public float MovementSpeed = 2f;
 
     public IEnumerator MoveTo(Vector3 moveToPoint){

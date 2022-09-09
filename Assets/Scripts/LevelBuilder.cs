@@ -133,7 +133,10 @@ public class LevelBuilder
             Debug.LogError("Start object isn`t created. Make CreateStartNFinish() first");
         
         PlayerObject.position = startPrefab.position + (-startPrefab.transform.right * (startPrefab.lossyScale.x * 0.75f));
+        Player player = PlayerObject.GetComponent<Player>();
+        player.EnemyCollided = false;
         PlayerMovement playerMovement = PlayerObject.GetComponent<PlayerMovement>();
+
 
         playerMovement.MovePlayer(PlayerObject.position, StartObject.position);
         playerObject.GetComponent<PlayerMovement>().enabled = true;
