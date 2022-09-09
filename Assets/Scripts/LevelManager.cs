@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelBuilder
+public class LevelManager
 {
     Transform parentObject;
     int startNumber;
@@ -29,7 +29,7 @@ public class LevelBuilder
     public List<Section> SpawnedSectionsList { get => spawnedSectionsList; }
     public Transform PlayerObject { get => playerObject;}
 
-    public LevelBuilder(
+    public LevelManager(
         GameManager gameManager,
         Transform parentObject
     )
@@ -140,5 +140,29 @@ public class LevelBuilder
 
         playerMovement.MovePlayer(PlayerObject.position, StartObject.position);
         playerObject.GetComponent<PlayerMovement>().enabled = true;
+    }
+
+    public IEnumerator HideSections(){
+        Task lastCellHidingProcess = null;
+
+        for (int i = 0; i < spawnedSectionsList.Count; i++)
+        {
+            Section section = spawnedSectionsList[i].GetComponent<Section>();
+
+            if(section.gameObject.active){
+                lastCellHidingProcess = new Task(section.HideCellsSequence());
+                yield return null;
+            }
+        }
+
+        yield return new WaitWhile(()=> lastCellHidingProcess.Running);
+        yield return null;
+
+        for (int i = 0; i < spawnedSectionsList.Count; i++)
+        {
+            Section section = spawnedSectionsList[i].GetComponent<Section>();
+            
+            section.gameObject.SetActive(false);
+        }
     }
 }

@@ -59,8 +59,8 @@ public class CameraMovement : MonoBehaviour
 
     void initializeStartNFinish()
     {
-        startObject = _gameManager.LevelBuilder.StartObject;
-        finishObject = _gameManager.LevelBuilder.FinishObject;
+        startObject = _gameManager.LevelManager.StartObject;
+        finishObject = _gameManager.LevelManager.FinishObject;
 
         finishTop = finishObject.position - (-finishObject.up * (finishObject.localScale.y / 2));
         startBottom = startObject.position - (startObject.up * (startObject.localScale.y / 2));

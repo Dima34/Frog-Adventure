@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public LevelData LevelDataSO;
     [HideInInspector]
-    public LevelBuilder LevelBuilder;
+    public LevelManager LevelManager;
     [HideInInspector]
     public GameObject LevelContainer;
 
@@ -101,14 +101,14 @@ public class GameManager : MonoBehaviour
     {
         createLevel(fromEditor);
         if(!fromEditor){
-            LevelBuilder.CreatePlayer();
-            LevelBuilder.SpawnPlayer();
+            LevelManager.CreatePlayer();
+            LevelManager.SpawnPlayer();
         }
     }
 
     void checkSectionsForActive()
     {
-        LevelBuilder.SpawnedSectionsList.ForEach(delegate (Section section)
+        LevelManager.SpawnedSectionsList.ForEach(delegate (Section section)
         {
             if (section.OrdinalNumber == currentStep)
             {
@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
     public void NextSectionNumber()
     {
         if (currentNumber != 0)
-            LevelBuilder.SpawnedSectionsList[currentNumber - 1].LeaveCorrectCell();
+            LevelManager.SpawnedSectionsList[currentNumber - 1].LeaveCorrectCell();
 
         currentStep++;
         currentNumber += increment;
@@ -139,16 +139,16 @@ public class GameManager : MonoBehaviour
         // Spawn a level parent container (playground)
         LevelContainer = new GameObject("Playground");
 
-        LevelBuilder = new LevelBuilder(this, LevelContainer.transform);
-        LevelBuilder.BuildLevel(fromEditor);
+        LevelManager = new LevelManager(this, LevelContainer.transform);
+        LevelManager.BuildLevel(fromEditor);
 
         GlobalEventManager.OnLevelBuilded.Fire();
     }
 
     public IEnumerator restartLevelSequence(){
-        LevelBuilder.HidePlayer();
+        LevelManager.HidePlayer();
 
-        Task sectionsHidingRoutine = new Task(HideSections());
+        Task sectionsHidingRoutine = new Task(LevelManager.HideSections());
         
         cameraMovement.SetCameraStartPosition();
         yield return new WaitWhile(() => cameraMovement.IsCameraMooving);
@@ -158,36 +158,13 @@ public class GameManager : MonoBehaviour
     }
 
     void restartLevel(){
-        LevelBuilder.SpawnPlayer();
-        LevelBuilder.CreateSections();
+        LevelManager.SpawnPlayer();
+        LevelManager.CreateSections();
         setDefaultGameStateValues();
         NextSectionNumber();
     }
 
-    public IEnumerator HideSections(){
-        List<Section> spawnedSectionsList = LevelBuilder.SpawnedSectionsList;
-        Task lastCellHidingProcess = null;
-
-        for (int i = 0; i < spawnedSectionsList.Count; i++)
-        {
-            Section section = spawnedSectionsList[i].GetComponent<Section>();
-
-            if(section.gameObject.active){
-                lastCellHidingProcess = new Task(section.HideCellsSequence());
-                yield return null;
-            }
-        }
-
-        yield return new WaitWhile(()=> lastCellHidingProcess.Running);
-        yield return null;
-
-        for (int i = 0; i < spawnedSectionsList.Count; i++)
-        {
-            Section section = spawnedSectionsList[i].GetComponent<Section>();
-            
-            section.gameObject.SetActive(false);
-        }
-    }
+    
 
     void checkForEnemies(){
         if(sectionsWithEnemies[currentStep - 1]){
