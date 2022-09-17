@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Section : MonoBehaviour
 {
-    public int OrdinalNumber { get => ordinalNumber;}
+    public int OrdinalNumber { get => ordinalNumber; }
     public int CorrectCellIndex { get => correctCellIndex; }
     public List<Cell> CellsList { get => cellsList; }
     public int ordinalNumber;
@@ -20,8 +20,8 @@ public class Section : MonoBehaviour
 
 
     public void SetUp(
-        int startNumber, 
-        int increment, 
+        int startNumber,
+        int increment,
         int ordinalNumber,
         float sideMarginSize,
         int cellAmount,
@@ -51,10 +51,6 @@ public class Section : MonoBehaviour
         // Get margin included left side coords
         Vector3 marginIncludedLeftPoint = transform.position + (localLeftVector * (includedSectionWidth / 2));
 
-        // Debug.Log("Cells ------");
-        // Debug.Log("includedSectionWidth " + includedSectionWidth);
-        // Debug.Log("cellGap " + cellGap);
-        // Debug.Log("marginIncludedLeftPoint " + marginIncludedLeftPoint);
 
         // Get random correct cell posistion
         correctCellIndex = Random.Range(0, cellAmount);
@@ -91,19 +87,23 @@ public class Section : MonoBehaviour
         }
     }
 
-    public IEnumerator HideCellsSequence(){
-        Task lastHideAnim = null;
+    public IEnumerator HideCellsSequence()
+    {
 
-        for (int i = 0; i < CellsList.Count; i++)
+        if (CellsList[0])
         {
-            if(CellsList[i]){
-                CellAnimation cellAnimation = CellsList[i].GetComponent<CellAnimation>();
-                
-                lastHideAnim = new Task(cellAnimation.HideCell());
-            }            
-        }
 
-        yield return new WaitWhile(()=> lastHideAnim.Running);
+            for (int i = 0; i < CellsList.Count - 1; i++)
+            {
+                CellAnimation cellAnimation = CellsList[i].GetComponent<CellAnimation>();
+            }
+
+            Cell lastListItem = CellsList[CellsList.Count - 1];
+
+            CellAnimation lastItemAnimator = lastListItem.GetComponent<CellAnimation>();
+
+            yield return StartCoroutine(lastItemAnimator.HideCell());
+        }
     }
 
     void setUpCell(Cell cell, int number)
@@ -112,23 +112,29 @@ public class Section : MonoBehaviour
         cell.SetNumber();
     }
 
-    public void LeaveCorrectCell(){
+    public void LeaveCorrectCell()
+    {
         for (int i = 0; i < cellsList.Count; i++)
         {
-            if(i != correctCellIndex){
+            if (i != correctCellIndex)
+            {
                 Cell currentCell = cellsList[i];
                 Task cellHiding = new Task(currentCell.GetComponent<CellAnimation>().HideCell());
-                
-                cellHiding.Finished+=(bool isfinished)=>{
+
+                cellHiding.Finished += (bool isfinished) =>
+                {
                     Destroy(currentCell.gameObject);
                 };
-            } else if(willCellsMove){
+            }
+            else if (willCellsMove)
+            {
                 StartCellMoveSequence(cellsList[i]);
             }
         }
     }
 
-    public void StartCellMoveSequence(Cell cell){
+    public void StartCellMoveSequence(Cell cell)
+    {
         float moveWayLength = Utils.CalcMarginIncludedSize(cell, transform.localScale.x, sideMarginSize) - cell.transform.lossyScale.x;
         Vector2 leftPoint = transform.position - (transform.right * moveWayLength / 2);
         Vector2 rightPoint = transform.position + (transform.right * moveWayLength / 2);
@@ -136,7 +142,8 @@ public class Section : MonoBehaviour
         StartCoroutine(cellMovement(cell, leftPoint, rightPoint));
     }
 
-    IEnumerator cellMovement(Cell cell, Vector2 leftPoint, Vector2 rightPoint){        
+    IEnumerator cellMovement(Cell cell, Vector2 leftPoint, Vector2 rightPoint)
+    {
         bool isMovingLeft = true;
 
         float movingSpeed = cellMoveSpeed / 10;
@@ -146,19 +153,22 @@ public class Section : MonoBehaviour
 
         while (true)
         {
-            if(currentX < leftX){
+            if (currentX < leftX)
+            {
                 currentX = leftX;
                 isMovingLeft = !isMovingLeft;
-            } else if(currentX > rightX){
+            }
+            else if (currentX > rightX)
+            {
                 currentX = rightX;
                 isMovingLeft = !isMovingLeft;
             }
-            
+
             float xAddition = (movingSpeed * Time.deltaTime * (isMovingLeft ? 1 : -1));
             cell.OnMoveEvent?.Invoke(new Vector2(xAddition, 0));
 
             currentX = currentX + xAddition;
-            cell.transform.position = new Vector2(currentX ,cell.transform.position.y);            
+            cell.transform.position = new Vector2(currentX, cell.transform.position.y);
             yield return null;
         }
 

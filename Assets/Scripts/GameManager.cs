@@ -145,15 +145,22 @@ public class GameManager : MonoBehaviour
         GlobalEventManager.OnLevelBuilded.Fire();
     }
 
-    public IEnumerator restartLevelSequence(){
-        LevelManager.HidePlayer();
+    public void RestartLevel(){
+        StartCoroutine(restartLevelSequence());
+    }
 
+    public IEnumerator restartLevelSequence(){
         Task sectionsHidingRoutine = new Task(LevelManager.HideSections());
         
         cameraMovement.SetCameraStartPosition();
+        Transform playerTransform = LevelManager.SpawnedPlayer;
+        Player player = playerTransform.GetComponent<Player>();
+        yield return StartCoroutine(player.Hide());
+
         yield return new WaitWhile(() => cameraMovement.IsCameraMooving);
         yield return new WaitWhile(() => sectionsHidingRoutine.Running);
 
+        player.Show();
         restartLevel();
     }
 
@@ -163,8 +170,6 @@ public class GameManager : MonoBehaviour
         setDefaultGameStateValues();
         NextSectionNumber();
     }
-
-    
 
     void checkForEnemies(){
         if(sectionsWithEnemies[currentStep - 1]){

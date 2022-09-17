@@ -133,7 +133,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8413168908945671575}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.3, y: 27.899998, z: 1.1419}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 5.004838, y: 5.004838, z: 5.004838}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8413168908945671575}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e32b933ba74762249b1f18d7870f7b0e, type: 3}
   m_Name: 
@@ -205,3 +205,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41909c0a745b1d14db7e19b48d69b558, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnemyCollided: 0
+  _hideAnimTime: 2

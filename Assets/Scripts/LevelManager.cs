@@ -20,14 +20,14 @@ public class LevelManager
     Cell cellPrefab;
     float propGaps;
     Vector3 levelDirection;
-    Transform playerObject;
+    Transform spawnedPlayer;
     
 
     public GameObject SectionsContainer;
     public Transform StartObject;
     public Transform FinishObject;
     public List<Section> SpawnedSectionsList { get => spawnedSectionsList; }
-    public Transform PlayerObject { get => playerObject;}
+    public Transform SpawnedPlayer { get => spawnedPlayer;}
 
     public LevelManager(
         GameManager gameManager,
@@ -112,34 +112,29 @@ public class LevelManager
     public void CreatePlayer()
     {
         // Teleport player on start plate
-        playerObject = Object.Instantiate(playerPrefab, new Vector3(0,0,-10), parentObject.rotation);
-        playerObject.SetParent(parentObject);
+        spawnedPlayer = Object.Instantiate(playerPrefab, new Vector3(0,0,-10), parentObject.rotation);
+        spawnedPlayer.SetParent(parentObject);
 
         // Disable movement
-        playerObject.GetComponent<PlayerMovement>().enabled = false;
+        spawnedPlayer.GetComponent<PlayerMovement>().enabled = false;
 
-        GlobalEventManager.OnPlayerCreated.Fire(playerObject);
-    }
-
-    public void HidePlayer(){
-        playerObject.position = new Vector3(0,0,-10);
-        playerObject.GetComponent<PlayerMovement>().enabled = false;
+        GlobalEventManager.OnPlayerCreated.Fire(spawnedPlayer);
     }
 
     public void SpawnPlayer(){
-        if(PlayerObject == null)
+        if(spawnedPlayer == null)
             Debug.LogError("You cannot spawn player which you don`t create. Make CreatePlayer() first.");
         if(StartObject == null)
             Debug.LogError("Start object isn`t created. Make CreateStartNFinish() first");
         
-        PlayerObject.position = startPrefab.position + (-startPrefab.transform.right * (startPrefab.lossyScale.x * 0.75f));
-        Player player = PlayerObject.GetComponent<Player>();
+        spawnedPlayer.position = startPrefab.position + (-startPrefab.transform.right * (startPrefab.lossyScale.x * 0.75f));
+        Player player = spawnedPlayer.GetComponent<Player>();
         player.EnemyCollided = false;
-        PlayerMovement playerMovement = PlayerObject.GetComponent<PlayerMovement>();
+        PlayerMovement playerMovement = spawnedPlayer.GetComponent<PlayerMovement>();
 
 
-        playerMovement.MovePlayer(PlayerObject.position, StartObject.position);
-        playerObject.GetComponent<PlayerMovement>().enabled = true;
+        playerMovement.MovePlayer(spawnedPlayer.position, StartObject.position);
+        spawnedPlayer.GetComponent<PlayerMovement>().enabled = true;
     }
 
     public IEnumerator HideSections(){
@@ -156,7 +151,6 @@ public class LevelManager
         }
 
         yield return new WaitWhile(()=> lastCellHidingProcess.Running);
-        yield return null;
 
         for (int i = 0; i < spawnedSectionsList.Count; i++)
         {
