@@ -87,23 +87,18 @@ public class Section : MonoBehaviour
         }
     }
 
-    public IEnumerator HideCellsSequence()
+    public IEnumerator HideCells()
     {
+        Task lastHideAnim = null;
 
-        if (CellsList[0])
+        for (int i = 0; i < CellsList.Count; i++)
         {
+            CellAnimation cellAnimation = CellsList[i].GetComponent<CellAnimation>();
 
-            for (int i = 0; i < CellsList.Count - 1; i++)
-            {
-                CellAnimation cellAnimation = CellsList[i].GetComponent<CellAnimation>();
-            }
-
-            Cell lastListItem = CellsList[CellsList.Count - 1];
-
-            CellAnimation lastItemAnimator = lastListItem.GetComponent<CellAnimation>();
-
-            yield return StartCoroutine(lastItemAnimator.HideCell());
+            lastHideAnim = new Task(cellAnimation.HideCell());
         }
+
+        yield return new WaitWhile(()=>lastHideAnim.Running);
     }
 
     void setUpCell(Cell cell, int number)

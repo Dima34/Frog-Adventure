@@ -37,10 +37,6 @@ public class CellAnimation : MonoBehaviour
             renderer.color = new Color(renderer.color.r, renderer.color.g, renderer.color.b, fadeValue);
             cellText.color = new Color(cellText.color.r, cellText.color.g, cellText.color.b, fadeValue);
 
-            if(t >= 0){
-                Destroy(this);
-            }
-
             yield return null;
         }while(t >= 0);
     }

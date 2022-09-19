@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public bool WillCellsMove { get => willCellsMove; }
     public float CellMoveSpeed { get => cellMoveSpeed; }
     public Enemy EnemyPrefab { get => enemyPrefab; }
+    public Camera Camera { get => _camera;}
     public CameraMovement CameraMovement { get => cameraMovement;}
     public float EnemyMovementSpeed { get => enemyMovementSpeed; }
 
@@ -49,7 +50,6 @@ public class GameManager : MonoBehaviour
     Enemy enemyPrefab;
     float enemyMovementSpeed;
     List<bool> sectionsWithEnemies;
-    EnemySpawner enemySpawner;
     CameraMovement cameraMovement;
 
 
@@ -60,10 +60,7 @@ public class GameManager : MonoBehaviour
         SetLevelData();
         
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkSectionsForActive);
-        if(enemies){
-            enemySpawner = new EnemySpawner(this);
-            GlobalEventManager.OnCurrentNumberChange.AddListener(checkForEnemies);
-        }
+        GlobalEventManager.OnCurrentNumberChange.AddListener(checkForEnemies);
         
         CreateGameSequence();
         setDefaultGameStateValues();
@@ -108,7 +105,7 @@ public class GameManager : MonoBehaviour
 
     void checkSectionsForActive()
     {
-        LevelManager.SpawnedSectionsList.ForEach(delegate (Section section)
+        LevelManager.SpawnedSections.ForEach(delegate (Section section)
         {
             if (section.OrdinalNumber == currentStep)
             {
@@ -120,7 +117,7 @@ public class GameManager : MonoBehaviour
     public void NextSectionNumber()
     {
         if (currentNumber != 0)
-            LevelManager.SpawnedSectionsList[currentNumber - 1].LeaveCorrectCell();
+            LevelManager.SpawnedSections[currentNumber - 1].LeaveCorrectCell();
 
         currentStep++;
         currentNumber += increment;
@@ -173,14 +170,12 @@ public class GameManager : MonoBehaviour
 
     void checkForEnemies(){
         if(sectionsWithEnemies[currentStep - 1]){
-            StartCoroutine(enemySpawnProcess());
+            StartCoroutine(spawnEnemy());
         }
     }
 
-    IEnumerator enemySpawnProcess(){
+    IEnumerator spawnEnemy(){
         yield return new WaitWhile(()=>CameraMovement.IsCameraMooving);
-        
-        Vector3 moveToPoint = _camera.ViewportToWorldPoint(new Vector3(0.5f,0,0));
-        StartCoroutine(enemySpawner.EnemyLifeCycleSequence(this.transform,moveToPoint));
+        LevelManager.SpawnEnemy();
     }
 }

@@ -91,9 +91,6 @@ public class Player : MonoBehaviour
 
             yield return null;
         }while(t >= 0);
-
-        transform.position = new Vector3(0,0,-10);
-        GetComponent<PlayerMovement>().enabled = false;
     }
 
     public void Show(){
