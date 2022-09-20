@@ -122,10 +122,14 @@ public class GameManager : MonoBehaviour
     {
         LevelManager.SpawnedSections.ForEach(delegate (Section section)
         {
-            if (section.OrdinalNumber == currentStep)
+            bool isActive = false;
+
+            if (section.OrdinalNumber <= currentStep)
             {
-                section.gameObject.SetActive(true);
+                isActive = true;
             }
+            
+            section.gameObject.SetActive(isActive);
         });
     }
 
@@ -146,7 +150,6 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator restartLevelSequence(){
         restartProcess = true;
-        Debug.Log("Restart level call");
         cameraMovement.SetCameraStartPosition();
         
         Task playerHidingProcess = new Task(LevelManager.HidePlayer());
@@ -155,7 +158,6 @@ public class GameManager : MonoBehaviour
         LevelManager.DestroyEnemies();
 
         yield return new WaitWhile(()=>cellHidingProcess.Running);
-        Debug.Log("Hiding ended");
         LevelManager.DestroyCells();
 
         yield return new WaitWhile(()=>playerHidingProcess.Running);

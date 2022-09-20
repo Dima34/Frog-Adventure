@@ -17,9 +17,8 @@ public class Section : MonoBehaviour
     int increment;
     int correctCellIndex;
     List<Cell> cellsList;
-
     Coroutine cellMovementProcess;
-
+    Task lastHideAnim = null;
 
     public void SetUp(
         int startNumber,
@@ -38,6 +37,12 @@ public class Section : MonoBehaviour
         this.cellAmount = cellAmount;
         this.willCellsMove = willCellsMove;
         this.cellMoveSpeed = cellMoveSpeed;
+    }
+
+    void setUpCell(Cell cell, int number)
+    {
+        cell.Number = number;
+        cell.SetNumber();
     }
 
     public void SpawnCells(Cell cell)
@@ -89,22 +94,6 @@ public class Section : MonoBehaviour
         }
     }
 
-    public IEnumerator HideCells()
-    {
-        Task lastHideAnim = null;
-
-        for (int i = 0; i < CellsList.Count; i++)
-        {
-            if(cellsList[i]){
-                CellAnimation cellAnimation = CellsList[i].GetComponent<CellAnimation>();
-
-                lastHideAnim = new Task(cellAnimation.HideCell());
-            }
-        }
-
-        yield return new WaitWhile(()=>lastHideAnim.Running);
-    }
-
     public void DestroyCells(){
         if(cellsList != null){
             foreach (var cell in cellsList)
@@ -122,25 +111,38 @@ public class Section : MonoBehaviour
         }
     }
 
-    void setUpCell(Cell cell, int number)
+    public IEnumerator HideCells()
     {
-        cell.Number = number;
-        cell.SetNumber();
+
+        for (int i = 0; i < CellsList.Count; i++)
+        {
+            if(cellsList[i]){
+                HideCell(cellsList[i]);
+            }
+        }
+
+        yield return new WaitWhile(()=>lastHideAnim.Running);
     }
 
-    public void LeaveCorrectCell()
+    public void HideCell(Cell cell){
+        CellAnimation cellAnimation = cell.GetComponent<CellAnimation>();
+
+        lastHideAnim = new Task(cellAnimation.HideCell());
+    }
+
+    public IEnumerator LeaveCorrectCell()
     {
         for (int i = 0; i < cellsList.Count; i++)
         {
             if (i != correctCellIndex)
             {
                 Cell currentCell = cellsList[i];
-                Task cellHiding = new Task(currentCell.GetComponent<CellAnimation>().HideCell());
 
-                cellHiding.Finished += (bool isfinished) =>
-                {
-                    Destroy(currentCell.gameObject);
-                };
+                HideCell(currentCell);
+
+                yield return new WaitWhile(()=>lastHideAnim.Running);
+
+                Destroy(currentCell.gameObject);
             }
             else if (willCellsMove)
             {
