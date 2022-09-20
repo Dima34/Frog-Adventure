@@ -28,4 +28,7 @@ MonoBehaviour:
   CellMoveSpeed: 30
   EnemyPrefab: {fileID: 6593064610127327743, guid: 7e70530f09ef8fb46a161ec2bed1cb5a, type: 3}
   EnemyMovementSpeed: 10
-  SectionsWithEnemies: 0101010101010101010101
+  EnemyTimepoints:
+  - time: 2
+  - time: 8
+  - time: 16

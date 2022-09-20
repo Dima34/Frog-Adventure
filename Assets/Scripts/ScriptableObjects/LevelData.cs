@@ -23,6 +23,19 @@ public class LevelData : ScriptableObject {
     // Enemy settings
     [SerializeField] public Enemy EnemyPrefab;
     [SerializeField] public float EnemyMovementSpeed;
-    [SerializeField] public List<bool> SectionsWithEnemies = new List<bool>();
+    [SerializeField] public List<EnemyTimepoint> EnemyTimepoints = new List<EnemyTimepoint>();
+}
 
+[System.Serializable]
+public class EnemyTimepoint{
+    [SerializeField] int time;
+    bool spawned;
+
+    public EnemyTimepoint(int onTime){
+        time = onTime;
+        spawned = false;
+    }
+
+    public bool Spawned { get => spawned; set => spawned = value; }
+    public int Time { get => time; set => time = value;}
 }

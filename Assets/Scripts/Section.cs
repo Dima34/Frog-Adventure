@@ -137,7 +137,6 @@ public class Section : MonoBehaviour
             if (i != correctCellIndex)
             {
                 Cell currentCell = cellsList[i];
-
                 HideCell(currentCell);
 
                 yield return new WaitWhile(()=>lastHideAnim.Running);

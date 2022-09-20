@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -49,8 +49,9 @@ public class GameManager : MonoBehaviour
     bool enemies;
     Enemy enemyPrefab;
     float enemyMovementSpeed;
-    List<bool> sectionsWithEnemies;
+    List<EnemyTimepoint> enemyTimepoints = new List<EnemyTimepoint>();
     CameraMovement cameraMovement;
+    float timeFromLevelStart;
 
     bool restartProcess = false;
 
@@ -62,7 +63,8 @@ public class GameManager : MonoBehaviour
         InitLevelManager();
         
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkSectionsForActive);
-        GlobalEventManager.OnCurrentNumberChange.AddListener(checkForEnemies);
+        // Enemy by section number
+        // GlobalEventManager.OnCurrentNumberChange.AddListener(checkForEnemies);
         
         CreateGameSequence();
         LevelManager.SpawnPlayer();
@@ -70,9 +72,20 @@ public class GameManager : MonoBehaviour
         NextSectionNumber();
     }
 
+    private void FixedUpdate() {
+        timeFromLevelStart += Time.fixedDeltaTime;
+
+        checkForEnemies();
+    }
+
     public void setDefaultGameStateValues(){
         currentNumber = startNumber;
         currentStep = 0;
+        timeFromLevelStart = 0;
+        foreach (EnemyTimepoint timePoint in enemyTimepoints)
+        {
+            timePoint.Spawned = false;
+        }
     }
 
     public void SetLevelData()
@@ -93,7 +106,8 @@ public class GameManager : MonoBehaviour
         enemies = LevelDataSO.Enemies; 
         enemyPrefab = LevelDataSO.EnemyPrefab;
         enemyMovementSpeed = LevelDataSO.EnemyMovementSpeed;
-        sectionsWithEnemies = LevelDataSO.SectionsWithEnemies;
+        enemyTimepoints = LevelDataSO.EnemyTimepoints;
+
         cameraMovement = _camera.GetComponent<CameraMovement>();
     }
 
@@ -128,7 +142,7 @@ public class GameManager : MonoBehaviour
             {
                 isActive = true;
             }
-            
+
             section.gameObject.SetActive(isActive);
         });
     }
@@ -172,9 +186,17 @@ public class GameManager : MonoBehaviour
         restartProcess = false;
     }
 
-    void checkForEnemies(){
-        if(sectionsWithEnemies[currentStep - 1]){
-            StartCoroutine(spawnEnemy());
+    void checkForEnemies(){ 
+        float timeFromStart = System.MathF.Round(timeFromLevelStart, 1);
+        Debug.Log("time from start " + timeFromStart);
+
+        foreach (EnemyTimepoint timePoint in enemyTimepoints)
+        {
+            float roundedTime = System.MathF.Round(timePoint.Time, 1);
+            if(roundedTime == timeFromStart && !timePoint.Spawned){
+                timePoint.Spawned = true;
+                StartCoroutine(spawnEnemy());
+            }
         }
     }
 

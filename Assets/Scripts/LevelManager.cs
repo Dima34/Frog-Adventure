@@ -238,7 +238,12 @@ public class LevelManager
 
     public void SpawnEnemy(){
         Vector3 moveToPoint = Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0,0));
-        gameManager.StartCoroutine(enemySpawner.SpawnEnemy(gameManager.transform,moveToPoint));
+
+        float enemyHeight = gameManager.EnemyPrefab.transform.localScale.y;
+        float fromPointY = FinishObject.position.y + enemyHeight;
+        Vector3 toPoint = StartObject.position - (StartObject.up * enemyHeight);
+
+        gameManager.StartCoroutine(enemySpawner.SpawnEnemy(gameManager.transform,fromPointY,toPoint));
     }
 
     public void DestroyEnemies(){

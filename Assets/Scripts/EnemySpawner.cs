@@ -41,12 +41,11 @@ public class EnemySpawner
         marginIncludedLeftPoint = spawnPoint.position + (localLeftVector * (includedSectionWidth / 2));
     }
 
-    Enemy createEnemy(Transform levelCenterPoint){
+    Enemy createEnemy(Transform levelCenterPoint, float ySpawnPoint){
         calcEnemySpawnBounds(levelCenterPoint);
 
         float spawnLineNumber = Random.Range(1, cellAmount + 1);
         float xSpawnPoint = marginIncludedLeftPoint.x + (spawnPointsGap * spawnLineNumber);
-        float ySpawnPoint = camera.ViewportToWorldPoint(new Vector3(1,1,0)).y;
 
         Enemy enemy = Object.Instantiate(
             enemyPrefab, 
@@ -61,9 +60,10 @@ public class EnemySpawner
 
     public IEnumerator SpawnEnemy(
         Transform levelCenterPoint,
+        float yFromPoint,
         Vector3 moveToPoint
     ){
-        Enemy enemy = createEnemy(levelCenterPoint);
+        Enemy enemy = createEnemy(levelCenterPoint,yFromPoint);
         existingEmenyList.Add(enemy);
 
         yield return enemy.StartCoroutine(enemy.MoveTo(moveToPoint));

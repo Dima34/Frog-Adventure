@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using UnityEditorInternal;
 
 [CustomEditor(typeof(LevelData))]
 public class LevelDataInspector : Editor {
@@ -19,7 +20,8 @@ public class LevelDataInspector : Editor {
     SerializedProperty cellMoveSpeed;
     SerializedProperty enemyPrefab;
     SerializedProperty enemyMovementSpeed;
-    SerializedProperty sectionsWithEnemies;
+    SerializedProperty enemyTimepointList;
+    ReorderableList timepointsReorderable;
 
     GUIStyle headingStyle;
 
@@ -40,7 +42,10 @@ public class LevelDataInspector : Editor {
         cellMoveSpeed = serializedObject.FindProperty("CellMoveSpeed");
         enemyPrefab = serializedObject.FindProperty("EnemyPrefab");
         enemyMovementSpeed = serializedObject.FindProperty("EnemyMovementSpeed");
-        sectionsWithEnemies = serializedObject.FindProperty("SectionsWithEnemies");
+        enemyTimepointList = serializedObject.FindProperty("EnemyTimepoints");
+
+        timepointsReorderable = new ReorderableList(serializedObject, enemyTimepointList, false, false, true, true);
+        timepointsReorderable.drawElementCallback = drawTimepointsElement;
     }
 
     public override void OnInspectorGUI() {
@@ -83,26 +88,23 @@ public class LevelDataInspector : Editor {
             EditorGUILayout.PropertyField(enemyMovementSpeed);
             EditorGUILayout.LabelField("Enemies on section");
 
-            if(sectionsWithEnemies.arraySize != iterationCount.intValue){
-                int sizeDiff = iterationCount.intValue - sectionsWithEnemies.arraySize;
-                sectionsWithEnemies.arraySize += sizeDiff;
-                Debug.Log("array size" + sectionsWithEnemies.arraySize );
-            }
 
-            EditorGUI.indentLevel = 1;
-            for (int i = sectionsWithEnemies.arraySize - 1; i >= 0; i--)
-            {
-                SerializedProperty element = sectionsWithEnemies.GetArrayElementAtIndex(i);
-
-                EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.LabelField((i + 1).ToString());
-                EditorGUILayout.PropertyField(element, GUIContent.none);
-                EditorGUILayout.EndHorizontal();
-            }
-            EditorGUI.indentLevel = 0;
-
+            timepointsReorderable.DoLayoutList();
         }        
 
         serializedObject.ApplyModifiedProperties();
     }
+
+    public void drawTimepointsElement(Rect rect, int index, bool isActive, bool isFocused){
+        SerializedProperty element = enemyTimepointList.GetArrayElementAtIndex(index);
+
+        Rect leftRect = new Rect(rect.x, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight);
+        Rect rightRect = new Rect(rect.x + rect.width / 2, rect.y, rect.width / 2, EditorGUIUtility.singleLineHeight);
+
+        EditorGUI.indentLevel = 1;
+        EditorGUI.LabelField(leftRect, "On time");
+        EditorGUI.PropertyField(rightRect, element.FindPropertyRelative("time"), GUIContent.none);
+        EditorGUI.indentLevel = 0;
+    }
+
 }
