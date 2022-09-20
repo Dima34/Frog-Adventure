@@ -4,18 +4,19 @@ using System.Collections;
 
 [CustomEditor(typeof(GameManager))]
 public class GameManagerInspector : Editor {
-    GameManager targetScript;
+    GameManager gameManager;
 
     void OnEnable() {
-        targetScript = (GameManager)target;
+        gameManager = (GameManager)target;
     }
 
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
 
         if(GUILayout.Button("Generate Level")){
-            targetScript.SetLevelData();
-            targetScript.CreateGameSequence(true);
+            gameManager.SetLevelData();
+            gameManager.InitLevelManager();
+            gameManager.CreateGameSequence();
         }
     }
 }

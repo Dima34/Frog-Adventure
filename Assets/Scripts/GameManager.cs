@@ -52,17 +52,20 @@ public class GameManager : MonoBehaviour
     List<bool> sectionsWithEnemies;
     CameraMovement cameraMovement;
 
+    bool restartProcess = false;
 
     int currentNumber;
 
     void Start()
     {
         SetLevelData();
+        InitLevelManager();
         
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkSectionsForActive);
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkForEnemies);
         
         CreateGameSequence();
+        LevelManager.SpawnPlayer();
         setDefaultGameStateValues();
         NextSectionNumber();
     }
@@ -96,11 +99,23 @@ public class GameManager : MonoBehaviour
 
     public void CreateGameSequence(bool fromEditor = false)
     {
-        createLevel(fromEditor);
-        if(!fromEditor){
-            LevelManager.CreatePlayer();
-            LevelManager.SpawnPlayer();
-        }
+        LevelManager.BuildLevel(fromEditor);
+
+        GlobalEventManager.OnLevelBuilded.Fire();
+    }
+
+    public void InitLevelManager(){
+        // Check if playground already exist
+        GameObject playground = GameObject.Find("Playground");
+
+        // If playground exist - delete it. That needs to spawn new one if you click a "Generate Level" button in inspector or start the level
+        if (playground != null)
+            GameManager.DestroyImmediate(playground);
+
+        // Spawn a level parent container (playground)
+        LevelContainer = new GameObject("Playground");
+
+        LevelManager = new LevelManager(this, LevelContainer.transform);
     }
 
     void checkSectionsForActive()
@@ -124,48 +139,35 @@ public class GameManager : MonoBehaviour
         GlobalEventManager.OnCurrentNumberChange.Fire();
     }
 
-    void createLevel(bool fromEditor)
-    {
-        // Check if playground already exist
-        GameObject playground = GameObject.Find("Playground");
-
-        // If playground exist - delete it. That needs to spawn new one if you click a "Generate Level" button in inspector or start the level
-        if (playground != null)
-            GameManager.DestroyImmediate(playground);
-
-        // Spawn a level parent container (playground)
-        LevelContainer = new GameObject("Playground");
-
-        LevelManager = new LevelManager(this, LevelContainer.transform);
-        LevelManager.BuildLevel(fromEditor);
-
-        GlobalEventManager.OnLevelBuilded.Fire();
-    }
-
     public void RestartLevel(){
-        StartCoroutine(restartLevelSequence());
+        if(!restartProcess)
+            StartCoroutine(restartLevelSequence());
     }
 
     public IEnumerator restartLevelSequence(){
-        Task sectionsHidingRoutine = new Task(LevelManager.HideSections());
-        
+        restartProcess = true;
+        Debug.Log("Restart level call");
         cameraMovement.SetCameraStartPosition();
-        Transform playerTransform = LevelManager.SpawnedPlayer;
-        Player player = playerTransform.GetComponent<Player>();
-        yield return StartCoroutine(player.Hide());
+        
+        Task playerHidingProcess = new Task(LevelManager.HidePlayer());
+        Task cellHidingProcess = new Task(LevelManager.HideCells());
 
+        LevelManager.DestroyEnemies();
+
+        yield return new WaitWhile(()=>cellHidingProcess.Running);
+        Debug.Log("Hiding ended");
+        LevelManager.DestroyCells();
+
+        yield return new WaitWhile(()=>playerHidingProcess.Running);
         yield return new WaitWhile(() => cameraMovement.IsCameraMooving);
-        yield return new WaitWhile(() => sectionsHidingRoutine.Running);
 
-        player.Show();
-        restartLevel();
-    }
-
-    void restartLevel(){
-        LevelManager.SpawnPlayer();
-        LevelManager.CreateSections();
         setDefaultGameStateValues();
+        LevelManager.SpawnCells();
+        LevelManager.ShowPlayer();
+        LevelManager.SpawnPlayer();
+
         NextSectionNumber();
+        restartProcess = false;
     }
 
     void checkForEnemies(){

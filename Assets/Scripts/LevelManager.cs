@@ -56,16 +56,23 @@ public class LevelManager
         enemySpawner = new EnemySpawner(gameManager);
     }
 
-    public void CreateLevel()
+    public void BuildLevel(bool fromEditor = false)
     {
+        DestroyLevel();
+        
         CreatePlayer();
         CreateStartPlate();
-        CreateSections();
+        CreateSections(fromEditor);
+        SpawnCells();
         CreateFinishPlate();
     }
-
+    
     public void DestroyLevel(){
-
+        DestroySections();
+        DestroyPlayer();
+        DestroyStartPlate();
+        DestroyFinishPlate();
+        DestroyEnemies();
     }
 
     public void CreatePlayer()
@@ -84,8 +91,6 @@ public class LevelManager
         if(spawnedPlayer){
             Object.Destroy(spawnedPlayer.gameObject);
             spawnedPlayer = null;
-        } else{
-            Debug.LogError("Can`t destroy player. Create it first");
         }
     }
 
@@ -99,8 +104,6 @@ public class LevelManager
         if(StartObject){
             Object.Destroy(StartObject.gameObject);
             StartObject = null;
-        } else{
-            Debug.LogError("Cant`t destroy start, create it first");
         }
     }
 
@@ -114,12 +117,10 @@ public class LevelManager
         if(FinishObject){
             Object.Destroy(FinishObject.gameObject);
             FinishObject = null;
-        } else{
-            Debug.LogError("Cant`t destroy finish, create it first");
         }
     }
 
-    public void CreateSections()
+    public void CreateSections(bool fromEditor = false)
     {
         SectionsContainer = new GameObject(sectionContainerName);
         SectionsContainer.transform.SetParent(parentObject);
@@ -146,6 +147,11 @@ public class LevelManager
             );
             // Add section to spawned sections list
             spawnedSections.Add(sectionScript);
+
+
+            // If call function not from editor - disable section
+            if (!fromEditor)
+                section.gameObject.SetActive(false);
         }
     }
 
@@ -190,6 +196,10 @@ public class LevelManager
 
         spawnedPlayer.transform.position = new Vector3(0,0,-10);
     }
+
+    public void ShowPlayer(){
+        spawnedPlayer.GetComponent<Player>().Show();
+    }
     
     public void SpawnCells(){
         if(spawnedSections == null){
@@ -203,7 +213,7 @@ public class LevelManager
         }
     }
 
-    public IEnumerator DestroyCells(){
+    public IEnumerator HideCells(){
         if(spawnedSections == null){
             Debug.LogError("Can`t destroy cells. Create sections first");
             yield break;
@@ -219,17 +229,24 @@ public class LevelManager
         yield return new WaitWhile(()=>hideCellsProcess.Running);
     }
 
+    public void DestroyCells(){
+        foreach (var section in spawnedSections)
+        {
+            section.DestroyCells();
+        }
+    }
+
     public void SpawnEnemy(){
         Vector3 moveToPoint = Camera.main.ViewportToWorldPoint(new Vector3(0.5f,0,0));
         gameManager.StartCoroutine(enemySpawner.SpawnEnemy(gameManager.transform,moveToPoint));
     }
 
-    public void RemoveEnemies(){
+    public void DestroyEnemies(){
         foreach (var enemy in enemySpawner.ExistingEmenyList)
         {
             if(enemy) Object.Destroy(enemy.gameObject);
         }
 
-        enemySpawner.ExistingEmenyList = null;
+        enemySpawner.ExistingEmenyList = new List<Enemy>();
     }
 }

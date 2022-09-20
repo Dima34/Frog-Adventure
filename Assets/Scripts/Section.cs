@@ -18,6 +18,8 @@ public class Section : MonoBehaviour
     int correctCellIndex;
     List<Cell> cellsList;
 
+    Coroutine cellMovementProcess;
+
 
     public void SetUp(
         int startNumber,
@@ -93,12 +95,31 @@ public class Section : MonoBehaviour
 
         for (int i = 0; i < CellsList.Count; i++)
         {
-            CellAnimation cellAnimation = CellsList[i].GetComponent<CellAnimation>();
+            if(cellsList[i]){
+                CellAnimation cellAnimation = CellsList[i].GetComponent<CellAnimation>();
 
-            lastHideAnim = new Task(cellAnimation.HideCell());
+                lastHideAnim = new Task(cellAnimation.HideCell());
+            }
         }
 
         yield return new WaitWhile(()=>lastHideAnim.Running);
+    }
+
+    public void DestroyCells(){
+        if(cellsList != null){
+            foreach (var cell in cellsList)
+            {
+                if(cell != null){
+                    if(cellMovementProcess != null){
+                        StopCoroutine(cellMovementProcess);
+                        cellMovementProcess = null;
+                    }
+                    Destroy(cell.gameObject);
+                }                    
+            }
+
+            cellsList = null;
+        }
     }
 
     void setUpCell(Cell cell, int number)
@@ -134,7 +155,7 @@ public class Section : MonoBehaviour
         Vector2 leftPoint = transform.position - (transform.right * moveWayLength / 2);
         Vector2 rightPoint = transform.position + (transform.right * moveWayLength / 2);
 
-        StartCoroutine(cellMovement(cell, leftPoint, rightPoint));
+        cellMovementProcess = StartCoroutine(cellMovement(cell, leftPoint, rightPoint));
     }
 
     IEnumerator cellMovement(Cell cell, Vector2 leftPoint, Vector2 rightPoint)
