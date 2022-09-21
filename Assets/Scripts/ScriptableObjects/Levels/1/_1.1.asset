@@ -30,5 +30,5 @@ MonoBehaviour:
   EnemyMovementSpeed: 10
   EnemyTimepoints:
   - time: 0
+  - time: 2
   - time: 8
-  - time: 16

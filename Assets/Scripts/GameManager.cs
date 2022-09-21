@@ -195,8 +195,6 @@ public class GameManager : MonoBehaviour
             Debug.Log(timeFromStart);
 
             if(roundedTime == timeFromStart && !timePoint.Spawned){
-                Debug.Log("=========Spawned in time " + timeFromStart);
-
                 timePoint.Spawned = true;
                 StartCoroutine(spawnEnemy());
             }
