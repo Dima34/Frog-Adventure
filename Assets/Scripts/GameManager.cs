@@ -176,6 +176,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitWhile(() => cameraMovement.IsCameraMooving);
         
 
+        LevelManager.DestroyEnemies();
         setDefaultGameStateValues();
         LevelManager.SpawnCells();
         LevelManager.ShowPlayer();
@@ -191,9 +192,11 @@ public class GameManager : MonoBehaviour
         foreach (EnemyTimepoint timePoint in enemyTimepoints)
         {
             float roundedTime = System.MathF.Round(timePoint.Time, 1);
-            // Debug.Log(timeFromStart);
+            Debug.Log(timeFromStart);
 
             if(roundedTime == timeFromStart && !timePoint.Spawned){
+                Debug.Log("=========Spawned in time " + timeFromStart);
+
                 timePoint.Spawned = true;
                 StartCoroutine(spawnEnemy());
             }

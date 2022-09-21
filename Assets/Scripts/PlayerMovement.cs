@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector3 pointToMove = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             pointToMove.z = 0;
-
+            
             MovePlayer(transform.position, pointToMove);
         }
     }
@@ -101,7 +101,6 @@ public class PlayerMovement : MonoBehaviour
         Cell cellScript = cellObject.transform.GetComponent<Cell>();
         cellScript.OnMoveEvent += followCell;
         isFollowing = true;
-        Debug.Log("IsFollowing " + isFollowing);
     }
     
     void followCell(Vector2 positionAddition)
@@ -112,8 +111,6 @@ public class PlayerMovement : MonoBehaviour
 
     void removeCellFollow(Collider2D collidedObject)
     {
-        Debug.Log("Remove follow");
-        Debug.Log("IsFollowing " + isFollowing);
         if (collidedObject.tag == "Cell" && isFollowing)
         {
             isFollowing = false;
