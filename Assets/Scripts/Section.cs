@@ -113,7 +113,6 @@ public class Section : MonoBehaviour
 
     public IEnumerator HideCells()
     {
-
         for (int i = 0; i < CellsList.Count; i++)
         {
             if(cellsList[i]){
@@ -136,17 +135,20 @@ public class Section : MonoBehaviour
         {
             if (i != correctCellIndex)
             {
-                Cell currentCell = cellsList[i];
-                HideCell(currentCell);
-
-                yield return new WaitWhile(()=>lastHideAnim.Running);
-
-                Destroy(currentCell.gameObject);
+                HideCell(cellsList[i]);
             }
             else if (willCellsMove)
             {
                 StartCellMoveSequence(cellsList[i]);
             }
+        }
+
+        yield return new WaitWhile(()=>lastHideAnim.Running);
+
+        for (int i = 0; i < cellsList.Count; i++)
+        {
+            if (i != correctCellIndex)
+                Destroy(cellsList[i].gameObject);
         }
     }
 

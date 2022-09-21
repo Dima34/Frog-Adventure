@@ -54,6 +54,8 @@ public class LevelManager
         propGaps = gameManager.PropGaps;
         levelDirection = parentObject.localRotation * Vector3.up;
         enemySpawner = new EnemySpawner(gameManager);
+
+        GlobalEventManager.OnCorrectCell.AddListener((Collider2D collided)=>{LeaveCorrectCell();});
     }
 
     public void BuildLevel(bool fromEditor = false)
@@ -233,6 +235,14 @@ public class LevelManager
         foreach (var section in spawnedSections)
         {
             section.DestroyCells();
+        }
+    }
+
+    public void LeaveCorrectCell(){
+        int currentNumber = gameManager.CurrentNumber;
+
+        if (currentNumber != 0){
+            gameManager.StartCoroutine(SpawnedSections[currentNumber - 1].LeaveCorrectCell());
         }
     }
 

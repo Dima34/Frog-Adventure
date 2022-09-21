@@ -63,8 +63,9 @@ public class GameManager : MonoBehaviour
         InitLevelManager();
         
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkSectionsForActive);
-        // Enemy by section number
-        // GlobalEventManager.OnCurrentNumberChange.AddListener(checkForEnemies);
+        GlobalEventManager.OnCorrectCell.AddListener((Collider2D collider)=>{
+            NextSectionNumber();
+        });
         
         CreateGameSequence();
         LevelManager.SpawnPlayer();
@@ -74,7 +75,6 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate() {
         timeFromLevelStart += Time.fixedDeltaTime;
-
         checkForEnemies();
     }
 
@@ -149,14 +149,12 @@ public class GameManager : MonoBehaviour
 
     public void NextSectionNumber()
     {
-        if (currentNumber != 0)
-            LevelManager.SpawnedSections[currentNumber - 1].LeaveCorrectCell();
-
         currentStep++;
         currentNumber += increment;
         GlobalEventManager.OnCurrentNumberChange.Fire();
     }
 
+    
     public void RestartLevel(){
         if(!restartProcess)
             StartCoroutine(restartLevelSequence());
@@ -176,6 +174,7 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitWhile(()=>playerHidingProcess.Running);
         yield return new WaitWhile(() => cameraMovement.IsCameraMooving);
+        
 
         setDefaultGameStateValues();
         LevelManager.SpawnCells();
@@ -188,11 +187,12 @@ public class GameManager : MonoBehaviour
 
     void checkForEnemies(){ 
         float timeFromStart = System.MathF.Round(timeFromLevelStart, 1);
-        Debug.Log("time from start " + timeFromStart);
 
         foreach (EnemyTimepoint timePoint in enemyTimepoints)
         {
             float roundedTime = System.MathF.Round(timePoint.Time, 1);
+            // Debug.Log(timeFromStart);
+
             if(roundedTime == timeFromStart && !timePoint.Spawned){
                 timePoint.Spawned = true;
                 StartCoroutine(spawnEnemy());

@@ -8,7 +8,6 @@ public class Player : MonoBehaviour
 {
     [HideInInspector]
     public bool EnemyCollided = false;
-    public Action OnCorrectCellUnderFeet;
     [SerializeField] float _hideAnimTime = 2f;
 
 
@@ -24,6 +23,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     private void OnTriggerEnter2D(Collider2D collidedObj)
     {
+        collidedObject = null;
         collidedObject = collidedObj;
     }
 
@@ -33,15 +33,14 @@ public class Player : MonoBehaviour
         checkEnemy(collidedObj);
     }
 
-    void cellUnderFeet()
+    void cellUnderFeet(Collider2D collidedCell)
     {
-        Cell cellScript = collidedObject.transform.GetComponent<Cell>();
+        Cell cellScript = collidedCell.transform.GetComponent<Cell>();
         int cellNumber = cellScript.Number;
 
         if (cellNumber == gameManager.CurrentNumber)
         {
-            gameManager.NextSectionNumber();
-            OnCorrectCellUnderFeet?.Invoke();
+            GlobalEventManager.OnCorrectCell.Fire(collidedCell);
         }
         else
         {
@@ -60,7 +59,7 @@ public class Player : MonoBehaviour
         switch (collidedObject.tag)
         {
             case "Cell":
-                cellUnderFeet();
+                cellUnderFeet(collidedObject);
                 break;
             case "Finsh":
                 break;

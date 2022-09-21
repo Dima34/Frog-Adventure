@@ -53,19 +53,19 @@ public static class GlobalEventManager
         }
     }
 
-    public static class OnCameraReachedStart{
-        static Action listenerList;
+    public static class OnCorrectCell{
+        static Action<Collider2D> listenerList;
 
-        public static void AddListener(Action listener){
+        public static void AddListener(Action<Collider2D> listener){
             listenerList += listener;
         }
 
-        public static void RemoveListener(Action listener){
+        public static void RemoveListener(Action<Collider2D> listener){
             listenerList -= listener;
         }
 
-        public static void Fire(){
-            listenerList?.Invoke();
+        public static void Fire(Collider2D cellObject){
+            listenerList?.Invoke(cellObject);
         }
     }
 }

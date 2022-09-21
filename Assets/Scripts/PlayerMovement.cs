@@ -18,14 +18,22 @@ public class PlayerMovement : MonoBehaviour
     Vector3 toPos;
     Player player;
 
-    bool _isMoving;
+    bool isMoving;
+    bool isFollowing;
 
     private void Awake()
     {
         mainCamera = Camera.main;
         cameraMovement = mainCamera.GetComponent<CameraMovement>();
         player = GetComponent<Player>();
-        player.OnCorrectCellUnderFeet += addCellFollow;
+    }
+
+    private void OnEnable() {
+        GlobalEventManager.OnCorrectCell.AddListener(addCellFollow);
+    }
+
+    private void OnDisable() {
+        GlobalEventManager.OnCorrectCell.RemoveListener(addCellFollow);
     }
 
     private void OnTriggerExit2D(Collider2D collidedObj)
@@ -40,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleMove()
     {
-        if (Input.GetMouseButtonDown(0) && !_isMoving && !cameraMovement.IsCameraMooving)
+        if (Input.GetMouseButtonDown(0) && !isMoving && !cameraMovement.IsCameraMooving)
         {
             Vector3 pointToMove = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             pointToMove.z = 0;
@@ -57,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
     {
         fromPos = from;
         toPos = to;
-        _isMoving = true;
+        isMoving = true;
         float t = 0;
 
         StartCoroutine("handleAnimationTimeChange");
@@ -69,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
             yield return null;
         }
 
-        _isMoving = false;
+        isMoving = false;
         player.CheckUnderFeet();
     }
 
@@ -89,9 +97,11 @@ public class PlayerMovement : MonoBehaviour
         _moveAnimator.SetBool("IsJumping", false);
     }
 
-    void addCellFollow(){
-        Cell cellScript = player.CollidedObject.transform.GetComponent<Cell>();
+    void addCellFollow(Collider2D cellObject){
+        Cell cellScript = cellObject.transform.GetComponent<Cell>();
         cellScript.OnMoveEvent += followCell;
+        isFollowing = true;
+        Debug.Log("IsFollowing " + isFollowing);
     }
     
     void followCell(Vector2 positionAddition)
@@ -102,8 +112,11 @@ public class PlayerMovement : MonoBehaviour
 
     void removeCellFollow(Collider2D collidedObject)
     {
-        if (collidedObject.tag == "Cell")
+        Debug.Log("Remove follow");
+        Debug.Log("IsFollowing " + isFollowing);
+        if (collidedObject.tag == "Cell" && isFollowing)
         {
+            isFollowing = false;
             Cell cellScript = collidedObject.GetComponent<Cell>();
 
             if (cellScript.OnMoveEvent != null)
