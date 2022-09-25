@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [HideInInspector]
     public LevelData LevelDataSO;
     [HideInInspector]
     public LevelManager LevelManager;
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
     public Camera Camera { get => _camera;}
     public CameraMovement CameraMovement { get => cameraMovement;}
     public float EnemyMovementSpeed { get => enemyMovementSpeed; }
+    public int CurrentStep { get => currentStep; }
 
     int startNumber;
     int increment;
@@ -59,6 +61,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        LevelDataSO = LevelUtils.GetLevelDataByName(UIManager.Level);
+        Debug.Log("loaded level " + LevelDataSO.name);
+
         SetLevelData();
         InitLevelManager();
         
@@ -192,7 +197,6 @@ public class GameManager : MonoBehaviour
         foreach (EnemyTimepoint timePoint in enemyTimepoints)
         {
             float roundedTime = System.MathF.Round(timePoint.Time, 1);
-            Debug.Log(timeFromStart);
 
             if(roundedTime == timeFromStart && !timePoint.Spawned){
                 timePoint.Spawned = true;

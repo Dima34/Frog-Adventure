@@ -389,8 +389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cae87550d56e814c9d344b7d70ef58a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _numberSectionsAmount: 10
-  _numberButtonPrefab: {fileID: 1282802957621374205, guid: e6b4bbe6bfa3486439c281f05d6e25a6, type: 3}
+  _numberButtonPrefab: {fileID: 3504003895202850384, guid: fa7bb67e91663744da04a29fc1db6bfe, type: 3}
   _buttonContainer: {fileID: 2137552264}
 --- !u!1 &1439532106
 GameObject:
@@ -672,5 +671,5 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 60, y: 60}
   m_Spacing: {x: 8, y: 10}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Constraint: 1
+  m_ConstraintCount: 5

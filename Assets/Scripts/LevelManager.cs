@@ -239,10 +239,10 @@ public class LevelManager
     }
 
     public void LeaveCorrectCell(){
-        int currentNumber = gameManager.CurrentNumber;
+        int currentStep = gameManager.CurrentStep;
 
-        if (currentNumber != 0){
-            gameManager.StartCoroutine(SpawnedSections[currentNumber - 1].LeaveCorrectCell());
+        if (currentStep != 0){
+            gameManager.StartCoroutine(SpawnedSections[currentStep - 1].LeaveCorrectCell());
         }
     }
 

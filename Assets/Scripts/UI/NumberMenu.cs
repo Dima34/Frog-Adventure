@@ -2,20 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class NumberMenu : MonoBehaviour
 {
-    [SerializeField] int _numberSectionsAmount = 10;
     [SerializeField] NumberButton _numberButtonPrefab;
     [SerializeField] GridLayoutGroup _buttonContainer;
 
-    private void Start() {
-        for (int i = 0; i < _numberSectionsAmount; i++)
+    LevelData[] allLevels;
+
+    private void Start()
+    {
+        createSectionCards();
+    }
+
+    void createSectionCards()
+    {
+        allLevels = Resources.LoadAll<LevelData>("Levels");
+        
+        HashSet<int> sectionNameSet = new HashSet<int>();
+
+        for (int i = 0; i < allLevels.Length; i++)
         {
-            Debug.Log("i - " + i);
+            sectionNameSet.Add(LevelUtils.GetLevelNameInfo(allLevels[i].name)[0]);
+        }
+        
+        foreach (var nameNum in sectionNameSet)
+        {
             NumberButton numButton = Instantiate(_numberButtonPrefab, new Vector3(), new Quaternion(), _buttonContainer.transform);
-            numButton.SectionNumber = i + 1;
-            numButton.applyText();
+            numButton.SectionNumber = nameNum;
+            numButton.ApplyText();
         }
     }
 }
