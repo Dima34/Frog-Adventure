@@ -73,13 +73,15 @@ public class GameManager : MonoBehaviour
         InitLevelManager();
         
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkSectionsForActive);
-        GlobalEventManager.OnCorrectCell.AddListener((Collider2D collider)=>{
-            NextSectionNumber();
-        });
+        GlobalEventManager.OnCorrectCell.AddListener(nextSectionNumber);
         
         CreateGameSequence();
         LevelManager.SpawnPlayer();
         setDefaultGameStateValues();
+        NextSectionNumber();
+    }
+
+    void nextSectionNumber(Collider2D collider){
         NextSectionNumber();
     }
 
@@ -229,7 +231,11 @@ public class GameManager : MonoBehaviour
             UIManager.Level = nextLevelData.name;
             LevelManager.DestroyLevel();
             LevelManager.DestroyPlayer();
+
             GlobalEventManager.OnCurrentNumberChange.RemoveListener(checkSectionsForActive);
+            GlobalEventManager.OnCorrectCell.RemoveListener(nextSectionNumber);
+            LevelManager.ClearEventListeners();
+
             LevelUtils.LoadLevel("Game");
         } else
         {

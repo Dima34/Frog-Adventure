@@ -55,7 +55,7 @@ public class LevelManager
         levelDirection = parentObject.localRotation * Vector3.up;
         enemySpawner = new EnemySpawner(gameManager);
 
-        GlobalEventManager.OnCorrectCell.AddListener((Collider2D collided)=>{LeaveCorrectCell();});
+        GlobalEventManager.OnCorrectCell.AddListener(leaveCorrectCell);
     }
 
     public void BuildLevel(bool fromEditor = false)
@@ -238,6 +238,10 @@ public class LevelManager
         }
     }
 
+    void leaveCorrectCell(Collider2D collided){
+        LeaveCorrectCell();
+    }
+    
     public void LeaveCorrectCell(){
         int currentStep = gameManager.CurrentStep;
 
@@ -263,5 +267,9 @@ public class LevelManager
         }
 
         enemySpawner.ExistingEmenyList = new List<Enemy>();
+    }
+
+    public void ClearEventListeners(){
+        GlobalEventManager.OnCorrectCell.RemoveListener(leaveCorrectCell);
     }
 }
