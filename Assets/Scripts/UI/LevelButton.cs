@@ -16,6 +16,6 @@ public class LevelButton : MonoBehaviour
     }
 
     public void ApplyText(){
-        buttonText.text = LevelUtils.GetLevelNameInfo(LevelName)[1].ToString();
+        buttonText.text = LevelUtils.GetLevelInfoByName(LevelName)[1].ToString();
     }
 }

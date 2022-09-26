@@ -24,7 +24,7 @@ public class NumberMenu : MonoBehaviour
 
         for (int i = 0; i < allLevels.Length; i++)
         {
-            sectionNameSet.Add(LevelUtils.GetLevelNameInfo(allLevels[i].name)[0]);
+            sectionNameSet.Add(LevelUtils.GetLevelInfoByName(allLevels[i].name)[0]);
         }
         
         foreach (var nameNum in sectionNameSet)

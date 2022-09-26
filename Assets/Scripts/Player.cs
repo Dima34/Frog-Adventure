@@ -33,6 +33,28 @@ public class Player : MonoBehaviour
         checkEnemy(collidedObj);
     }
 
+
+    public void CheckUnderFeet()
+    {
+        if (collidedObject == null)
+        {
+            gameManager.RestartLevel();
+            return;
+        }
+
+        switch (collidedObject.tag)
+        {
+            case "Cell":
+                cellUnderFeet(collidedObject);
+                break;
+            case "Finish":
+                finishUnderFeet();
+                break;
+            case "Start":
+                break;
+        }
+    }
+
     void cellUnderFeet(Collider2D collidedCell)
     {
         Cell cellScript = collidedCell.transform.GetComponent<Cell>();
@@ -48,24 +70,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void CheckUnderFeet()
-    {
-        if (collidedObject == null)
-        {
-            gameManager.RestartLevel();
-            return;
-        }
+    void finishUnderFeet(){
+        PlayerMovement playerMovement = GetComponent<PlayerMovement>();
+        playerMovement.enabled = false;
 
-        switch (collidedObject.tag)
-        {
-            case "Cell":
-                cellUnderFeet(collidedObject);
-                break;
-            case "Finsh":
-                break;
-            case "Start":
-                break;
-        }
+        StartCoroutine(gameManager.FinishGameSequence());
     }
 
     public void checkEnemy(Collider2D collidedObj){

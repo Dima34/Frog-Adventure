@@ -61,8 +61,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        LevelDataSO = LevelUtils.GetLevelDataByName(UIManager.Level);
+        LevelDataSO = LevelUtils.GetLevelByName(UIManager.Level);
         Debug.Log("loaded level " + LevelDataSO.name);
+
+        initGame();
+    }
+
+    void initGame(){
 
         SetLevelData();
         InitLevelManager();
@@ -158,7 +163,6 @@ public class GameManager : MonoBehaviour
         currentNumber += increment;
         GlobalEventManager.OnCurrentNumberChange.Fire();
     }
-
     
     public void RestartLevel(){
         if(!restartProcess)
@@ -208,5 +212,28 @@ public class GameManager : MonoBehaviour
     IEnumerator spawnEnemy(){
         yield return new WaitWhile(()=>CameraMovement.IsCameraMooving);
         LevelManager.SpawnEnemy();
+    }
+
+    public IEnumerator FinishGameSequence(){
+        Debug.Log("finish sequence started");
+        yield return new WaitForSeconds(2);
+        
+        int currentLevelNumber = LevelUtils.GetLevelInfoByName(LevelDataSO.name)[1];
+        List<LevelData> currentSectionLevels = LevelUtils.GetSectionLevels(currentLevelNumber);
+
+        if(LevelUtils.IsNextLevelExist(currentSectionLevels, currentLevelNumber))
+        {
+            LevelData nextLevelData = LevelUtils.GetNextLevel(currentSectionLevels, currentLevelNumber);
+            // LevelDataSO = nextLevelData;
+            // initGame();
+            UIManager.Level = nextLevelData.name;
+            LevelManager.DestroyLevel();
+            LevelManager.DestroyPlayer();
+            GlobalEventManager.OnCurrentNumberChange.RemoveListener(checkSectionsForActive);
+            LevelUtils.LoadLevel("Game");
+        } else
+        {
+            LevelUtils.LoadLevel("NumberMenu");
+        }
     }
 }

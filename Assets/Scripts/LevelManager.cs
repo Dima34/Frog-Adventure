@@ -165,7 +165,7 @@ public class LevelManager
                 Object.Destroy(section.gameObject);
             }
 
-            spawnedPlayer = null;
+            spawnedSections = null;
         }
     }
 

@@ -21,7 +21,7 @@ public class LevelMenu : MonoBehaviour
         // get all levels of current section
         foreach (var level in allLevels)
         {
-            if(LevelUtils.GetLevelNameInfo(level.name)[0] == UIManager.SectionNumber){
+            if(LevelUtils.GetLevelInfoByName(level.name)[0] == UIManager.SectionNumber){
                 currentSectionLevels.Add(level);
             }
         }
