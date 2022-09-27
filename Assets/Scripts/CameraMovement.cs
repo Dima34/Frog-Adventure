@@ -36,6 +36,10 @@ public class CameraMovement : MonoBehaviour
     }
 
     private void OnDestroy() {
+        ClearEventListeners();
+    }
+
+    public void ClearEventListeners(){
         GlobalEventManager.OnLevelBuilded.RemoveListener(Initialize);
         GlobalEventManager.OnPlayerCreated.RemoveListener(setPlayerObject);
         GlobalEventManager.OnCurrentNumberChange.RemoveListener(checkPosition);

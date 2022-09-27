@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
-using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Player))]
 public class PlayerMovement : MonoBehaviour
@@ -50,6 +49,21 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !isMoving && !cameraMovement.IsCameraMooving)
         {
+            
+            if(EventSystem.current.IsPointerOverGameObject()){
+                Debug.Log(EventSystem.current.currentSelectedGameObject.name);
+                if(EventSystem.current.currentSelectedGameObject.name != null)
+                    return;
+            }
+
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray,out hit))
+            {
+                Debug.Log("hit");
+            }
+
             Vector3 pointToMove = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             pointToMove.z = 0;
             

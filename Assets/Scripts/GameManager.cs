@@ -217,29 +217,36 @@ public class GameManager : MonoBehaviour
     }
 
     public IEnumerator FinishGameSequence(){
-        Debug.Log("finish sequence started");
         yield return new WaitForSeconds(2);
         
         int currentLevelNumber = LevelUtils.GetLevelInfoByName(LevelDataSO.name)[1];
-        List<LevelData> currentSectionLevels = LevelUtils.GetSectionLevels(currentLevelNumber);
+        int currentLevelSection = LevelUtils.GetLevelInfoByName(LevelDataSO.name)[0];
+
+
+        List<LevelData> currentSectionLevels = LevelUtils.GetSectionLevels(currentLevelSection);
 
         if(LevelUtils.IsNextLevelExist(currentSectionLevels, currentLevelNumber))
         {
             LevelData nextLevelData = LevelUtils.GetNextLevel(currentSectionLevels, currentLevelNumber);
-            // LevelDataSO = nextLevelData;
-            // initGame();
             UIManager.Level = nextLevelData.name;
+
             LevelManager.DestroyLevel();
             LevelManager.DestroyPlayer();
 
-            GlobalEventManager.OnCurrentNumberChange.RemoveListener(checkSectionsForActive);
-            GlobalEventManager.OnCorrectCell.RemoveListener(nextSectionNumber);
-            LevelManager.ClearEventListeners();
+            ClearListeners();
 
             LevelUtils.LoadLevel("Game");
         } else
         {
+            ClearListeners();
             LevelUtils.LoadLevel("NumberMenu");
         }
+    }
+
+    public void ClearListeners(){
+        GlobalEventManager.OnCurrentNumberChange.RemoveListener(checkSectionsForActive);
+        GlobalEventManager.OnCorrectCell.RemoveListener(nextSectionNumber);
+        LevelManager.ClearEventListeners();
+        CameraMovement.ClearEventListeners();
     }
 }
