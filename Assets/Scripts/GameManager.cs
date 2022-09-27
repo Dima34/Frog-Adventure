@@ -1,19 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] Camera _camera;
+    [SerializeField] TMP_Text _levelText;
+
     [HideInInspector]
     public LevelData LevelDataSO;
     [HideInInspector]
     public LevelManager LevelManager;
     [HideInInspector]
     public GameObject LevelContainer;
-
-    [SerializeField] Camera _camera;
-
     public int StartNumber { get => startNumber; }
     public int Increment { get => increment; }
     public int IterationCount { get => iterationCount; }
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     {
         LevelDataSO = LevelUtils.GetLevelByName(UIManager.Level);
         Debug.Log("loaded level " + LevelDataSO.name);
-
+        initUi();
         initGame();
     }
 
@@ -79,6 +79,10 @@ public class GameManager : MonoBehaviour
         LevelManager.SpawnPlayer();
         setDefaultGameStateValues();
         NextSectionNumber();
+    }
+
+    void initUi(){
+        _levelText.text = LevelUtils.GetLevelInfoByName(LevelDataSO.name)[0].ToString() + "`s";
     }
 
     void nextSectionNumber(Collider2D collider){
@@ -221,7 +225,6 @@ public class GameManager : MonoBehaviour
         
         int currentLevelNumber = LevelUtils.GetLevelInfoByName(LevelDataSO.name)[1];
         int currentLevelSection = LevelUtils.GetLevelInfoByName(LevelDataSO.name)[0];
-
 
         List<LevelData> currentSectionLevels = LevelUtils.GetSectionLevels(currentLevelSection);
 
