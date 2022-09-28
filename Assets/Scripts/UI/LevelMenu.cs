@@ -10,26 +10,29 @@ public class LevelMenu : MonoBehaviour
 
     void Start()
     {
+        LevelStatus.GetData();
         createLevelButtons();    
     }
     
     void createLevelButtons()
     {
-        LevelData[] allLevels = Resources.LoadAll<LevelData>("Levels");
-        List<LevelData> currentSectionLevels = new List<LevelData>();
+        LevelItemsData levelStatus = LevelStatus.GetData();
+        List<LevelItem> currentSectionLevels = new List<LevelItem>();
 
         // get all levels of current section
-        foreach (var level in allLevels)
+        foreach (var level in levelStatus.Data)
         {
-            if(LevelUtils.GetLevelInfoByName(level.name)[0] == UIManager.SectionNumber){
+            if(LevelUtils.GetLevelInfoByName(level.Name)[0] == UIManager.SectionNumber){
                 currentSectionLevels.Add(level);
             }
         }
         
+        // Create buttons
         foreach (var level in currentSectionLevels)
         {
             LevelButton levelButton = UnityEngine.Object.Instantiate(_levelButton, new Vector3(), new Quaternion(), _buttonContainer.transform);
-            levelButton.LevelName = level.name;
+            levelButton.LevelName = level.Name;
+            levelButton.IsLevelOpened = level.IsOpened;
             levelButton.ApplyText();
         }
     }

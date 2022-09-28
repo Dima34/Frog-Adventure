@@ -231,7 +231,9 @@ public class GameManager : MonoBehaviour
         if(LevelUtils.IsNextLevelExist(currentSectionLevels, currentLevelNumber))
         {
             LevelData nextLevelData = LevelUtils.GetNextLevel(currentSectionLevels, currentLevelNumber);
+            LevelStatus.OpenLevel(nextLevelData.name);
             UIManager.Level = nextLevelData.name;
+
 
             LevelManager.DestroyLevel();
             LevelManager.DestroyPlayer();

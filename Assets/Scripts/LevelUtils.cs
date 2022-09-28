@@ -39,8 +39,8 @@ public static class LevelUtils
         return Resources.LoadAll<LevelData>("Levels");
     }
 
-    public static LevelData GetNextLevel(List<LevelData> levelsInSectionList, int currentLevelNumber){
-        foreach (var level in levelsInSectionList)
+    public static LevelData GetNextLevel(List<LevelData> levelsInSection, int currentLevelNumber){
+        foreach (var level in levelsInSection)
         {
             int levelNumber = LevelUtils.GetLevelInfoByName(level.name)[1];
 

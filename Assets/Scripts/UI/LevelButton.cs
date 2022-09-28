@@ -9,13 +9,20 @@ public class LevelButton : MonoBehaviour
 {
     [SerializeField] TMP_Text buttonText;
     public string LevelName = "";
+    public bool IsLevelOpened;
 
     public void LoadLevel(){
-        UIManager.Level = LevelName;
-        LevelUtils.LoadLevel(3);
+        if(IsLevelOpened){
+            UIManager.Level = LevelName;
+            LevelUtils.LoadLevel(3);
+        }
     }
 
     public void ApplyText(){
-        buttonText.text = LevelUtils.GetLevelInfoByName(LevelName)[1].ToString();
+        if(IsLevelOpened){
+            buttonText.text = LevelUtils.GetLevelInfoByName(LevelName)[1].ToString();
+        } else{
+            buttonText.text = "L";
+        }
     }
 }
