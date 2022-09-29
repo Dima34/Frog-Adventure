@@ -10,6 +10,7 @@ public class LevelDataInspector : Editor {
     SerializedProperty playerPrefab;
     SerializedProperty startPrefab;
     SerializedProperty finishPrefab;
+    SerializedProperty backgroundPrefab;
     SerializedProperty enemies;
     SerializedProperty sectionPrefab;
     SerializedProperty cellPrefab;
@@ -32,6 +33,7 @@ public class LevelDataInspector : Editor {
         playerPrefab = serializedObject.FindProperty("PlayerPrefab");
         startPrefab = serializedObject.FindProperty("StartPrefab");
         finishPrefab = serializedObject.FindProperty("FinishPrefab");
+        backgroundPrefab = serializedObject.FindProperty("BackgroundPrefab");
         enemies = serializedObject.FindProperty("Enemies");
         sectionPrefab = serializedObject.FindProperty("SectionPrefab");
         cellPrefab = serializedObject.FindProperty("CellPrefab");
@@ -65,6 +67,7 @@ public class LevelDataInspector : Editor {
         EditorGUILayout.ObjectField(playerPrefab, typeof(Transform));
         EditorGUILayout.ObjectField(startPrefab, typeof(Transform));
         EditorGUILayout.ObjectField(finishPrefab, typeof(Transform));
+        EditorGUILayout.ObjectField(backgroundPrefab, typeof(Transform));
         EditorGUILayout.PropertyField(enemies);
 
         EditorGUILayout.Space(10);

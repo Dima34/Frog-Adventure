@@ -50,7 +50,7 @@ public class EnemySpawner
         Enemy enemy = Object.Instantiate(
             enemyPrefab, 
             new Vector3(xSpawnPoint, ySpawnPoint + enemyPrefab.transform.localScale.y, 10),
-            gameManager.transform.rotation
+            Quaternion.AngleAxis(-90, new Vector3(0,0,1))
         );
         if(enemySpeed == 0)
             Debug.LogError("Warning! Enemy speed = 0");

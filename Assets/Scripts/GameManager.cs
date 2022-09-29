@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public Transform PlayerPrefab { get => playerPrefab; }
     public Transform StartPrefab { get => startPrefab; }
     public Transform FinishPrefab { get => finishPrefab; }
+    public Transform BackgroundPrefab { get => backgroundPrefab; }
     public Section SectionPrefab { get => sectionPrefab; }
     public Cell CellPrefab { get => cellPrefab; }
     public float PropGaps { get => propGaps; }
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
     Transform playerPrefab;
     Transform startPrefab;
     Transform finishPrefab;
+    Transform backgroundPrefab;
     Section sectionPrefab;
     Cell cellPrefab;
     float propGaps;
@@ -112,6 +114,7 @@ public class GameManager : MonoBehaviour
         playerPrefab = LevelDataSO.PlayerPrefab;
         startPrefab = LevelDataSO.StartPrefab;
         finishPrefab = LevelDataSO.FinishPrefab;
+        backgroundPrefab =LevelDataSO.BackgroundPrefab;
         sectionPrefab = LevelDataSO.SectionPrefab;
         cellPrefab = LevelDataSO.CellPrefab;
         propGaps = LevelDataSO.PropGaps;

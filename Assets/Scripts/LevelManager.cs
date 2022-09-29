@@ -7,6 +7,7 @@ public class LevelManager
     public GameObject SectionsContainer;
     public Transform StartObject;
     public Transform FinishObject;
+    public Transform BackgroundObject;
     public List<Section> SpawnedSections { get => spawnedSections; }
     public Transform SpawnedPlayer { get => spawnedPlayer; }
     
@@ -18,6 +19,7 @@ public class LevelManager
     Transform playerPrefab;
     Transform startPrefab;
     Transform finishPrefab;
+    Transform backgroundPrefab;
     Section sectionPrefab;
     List<Section> spawnedSections;
     float sectionSideMarginSize;
@@ -45,6 +47,7 @@ public class LevelManager
         playerPrefab = gameManager.PlayerPrefab;
         startPrefab = gameManager.StartPrefab;
         finishPrefab = gameManager.FinishPrefab;
+        backgroundPrefab = gameManager.BackgroundPrefab;
         sectionPrefab = gameManager.SectionPrefab;
         sectionSideMarginSize = gameManager.SectionSideMarginSize;
         cellInSectionAmount = gameManager.CellInSectionAmount;
@@ -64,6 +67,7 @@ public class LevelManager
         
         CreatePlayer();
         CreateStartPlate();
+        CreateBackground();
         CreateSections(fromEditor);
         SpawnCells();
         CreateFinishPlate();
@@ -73,6 +77,7 @@ public class LevelManager
         DestroySections();
         DestroyPlayer();
         DestroyStartPlate();
+        DestroyBackground();
         DestroyFinishPlate();
         DestroyEnemies();
     }
@@ -119,6 +124,23 @@ public class LevelManager
         if(FinishObject){
             Object.Destroy(FinishObject.gameObject);
             FinishObject = null;
+        }
+    }
+
+    public void CreateBackground(){
+        Vector3 levelLength = StartObject.transform.position + (levelDirection * propGaps * (iterationCount + 1));
+        BackgroundObject = Object.Instantiate(backgroundPrefab, levelLength / 2, StartObject.rotation);
+        
+        SpriteRenderer spriteRenderer = BackgroundObject.GetComponent<SpriteRenderer>();
+        spriteRenderer.size = new Vector2(spriteRenderer.size.x, levelLength.y / BackgroundObject.transform.localScale.y);
+
+        BackgroundObject.SetParent(parentObject, true);
+    }
+
+    public void DestroyBackground(){
+        if(BackgroundObject){
+            Object.Destroy(BackgroundObject.gameObject);
+            BackgroundObject = null;
         }
     }
 

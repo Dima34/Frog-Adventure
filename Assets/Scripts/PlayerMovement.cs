@@ -50,11 +50,12 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && !isMoving && !cameraMovement.IsCameraMooving)
         {
             
-            if(EventSystem.current.IsPointerOverGameObject()){
-                if(EventSystem.current.currentSelectedGameObject != null)
-                    return;
+            if(EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null){
+                Debug.Log(EventSystem.current.IsPointerOverGameObject());
+                Debug.Log(EventSystem.current.currentSelectedGameObject);
+                return;
             }
-
+        
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 

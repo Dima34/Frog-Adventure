@@ -23,12 +23,12 @@ public static class LevelStatus
             defaultLevelItemList.Add(defaultLevelItem);
         }
 
-        SaveData(defaultLevelItemList);
+        SaveData(new LevelItemsData(defaultLevelItemList));
     }
 
-    public static void SaveData(List<LevelItem> levelList){
+    public static void SaveData(LevelItemsData data){
         string savingPath = getLevelDataPath();
-        string dataToSaveJson = JsonUtility.ToJson(new LevelItemsData(levelList));
+        string dataToSaveJson = JsonUtility.ToJson(data);
 
         using StreamWriter writer = new StreamWriter(savingPath);
         writer.Write(dataToSaveJson);
@@ -81,7 +81,7 @@ public static class LevelStatus
             }
         }
         
-        SaveData(levelsData.Data);
+        SaveData(levelsData);
     }
 }
 

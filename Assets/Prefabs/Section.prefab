@@ -74,15 +74,15 @@ SpriteRenderer:
   m_SortingLayerID: 184795431
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 386c8c81c796e984fb95a11cbc1747b3, type: 3}
-  m_Color: {r: 0.052364826, g: 0, b: 1, a: 1}
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &6559451546653941062
@@ -97,7 +97,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6c4998a92728e14cb120b7803e4d925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sideMarginSize: 3
-  _cellAmount: 3
-  willCellsMove: 1
-  cellMoveSpeed: 70
+  ordinalNumber: 0

@@ -9,6 +9,7 @@ public class LevelData : ScriptableObject {
     [SerializeField] public Transform PlayerPrefab;
     [SerializeField] public Transform StartPrefab;
     [SerializeField] public Transform FinishPrefab;
+    [SerializeField] public Transform BackgroundPrefab;
     [SerializeField] public bool Enemies;
 
     // Section settings
