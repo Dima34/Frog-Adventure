@@ -17,6 +17,7 @@ public class LevelButton : MonoBehaviour
     public void LoadLevel(){
         if(IsLevelOpened){
             UIManager.Level = LevelName;
+            UIManager.LevelFromMenu = true;
             LevelUtils.LoadLevel(3);
         }
     }

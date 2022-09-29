@@ -19,6 +19,7 @@ MonoBehaviour:
   StartPrefab: {fileID: 8840974579410243326, guid: 9244bcde49f7a2243a30c495705878be, type: 3}
   FinishPrefab: {fileID: 5575744622065984935, guid: b6e97a11342e24e4c80975f198b82237, type: 3}
   BackgroundPrefab: {fileID: 5575744622065984935, guid: f393c96e79c47854c8be6692061d582d, type: 3}
+  HintArrowPrefab: {fileID: 9216793748155620515, guid: 4ff1c921d145c9f49a51fe31cc5f148c, type: 3}
   Enemies: 1
   SectionPrefab: {fileID: 6559451546653941062, guid: 23667c6d1baace64691e8f48c19de63d, type: 3}
   CellPrefab: {fileID: 5219142901616382254, guid: 084cab433549f0042af155d841647801, type: 3}
