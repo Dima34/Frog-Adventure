@@ -7,6 +7,11 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] Camera _camera;
     [SerializeField] TMP_Text _levelText;
+    [SerializeField] AudioSource _backgroundSoundPlayer;
+    [SerializeField] AudioSource _FailNSuccessSoundPlayer;
+    [SerializeField] AudioClip _successClip;
+    [SerializeField] AudioClip _failClip;
+
 
     [HideInInspector]
     public LevelData LevelDataSO;
@@ -58,6 +63,7 @@ public class GameManager : MonoBehaviour
     List<EnemyTimepoint> enemyTimepoints = new List<EnemyTimepoint>();
     CameraMovement cameraMovement;
     float timeFromLevelStart;
+    AudioClip backgroundClip;
 
     bool restartProcess = false;
 
@@ -75,6 +81,7 @@ public class GameManager : MonoBehaviour
 
         SetLevelData();
         InitLevelManager();
+        startBackgroundSound();
         
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkSectionsForActive);
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkHint);
@@ -131,6 +138,8 @@ public class GameManager : MonoBehaviour
         enemyMovementSpeed = LevelDataSO.EnemyMovementSpeed;
         enemyTimepoints = LevelDataSO.EnemyTimepoints;
 
+        backgroundClip = LevelDataSO.BackgroundClip;
+
         cameraMovement = _camera.GetComponent<CameraMovement>();
     }
 
@@ -179,6 +188,7 @@ public class GameManager : MonoBehaviour
     
     public void RestartLevel(){
         if(!restartProcess)
+            PlayFail();
             StartCoroutine(restartLevelSequence());
     }
 
@@ -270,5 +280,20 @@ public class GameManager : MonoBehaviour
         GlobalEventManager.OnCorrectCell.RemoveListener(nextSectionNumber);
         LevelManager.ClearEventListeners();
         CameraMovement.ClearEventListeners();
+    }
+
+    void startBackgroundSound(){
+        _backgroundSoundPlayer.clip = backgroundClip;
+        _backgroundSoundPlayer.Play();
+    }
+
+    public void PlaySuccess(){
+        _FailNSuccessSoundPlayer.clip = _successClip;
+        _FailNSuccessSoundPlayer.Play();
+    }
+
+    public void PlayFail(){
+        _FailNSuccessSoundPlayer.clip = _failClip;
+        _FailNSuccessSoundPlayer.Play();
     }
 }

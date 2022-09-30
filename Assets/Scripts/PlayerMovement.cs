@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Move animation  settings")]
     [SerializeField] Animator _moveAnimator;
     [SerializeField] float _delayedUnplugTime = 0.5f;
+    [SerializeField] AudioSource _jumpSound;
 
     Camera mainCamera;
     CameraMovement cameraMovement;
@@ -55,14 +56,6 @@ public class PlayerMovement : MonoBehaviour
                 Debug.Log(EventSystem.current.currentSelectedGameObject);
                 return;
             }
-        
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray,out hit))
-            {
-                Debug.Log("hit");
-            }
 
             Vector3 pointToMove = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             pointToMove.z = 0;
@@ -90,6 +83,8 @@ public class PlayerMovement : MonoBehaviour
             transform.position = Vector3.Lerp(fromPos, toPos, Utils.EaseInOut(t / _movementTime));
             yield return null;
         }
+
+        _jumpSound.Play();
 
         isMoving = false;
         player.CheckUnderFeet();

@@ -71,6 +71,8 @@ public class Player : MonoBehaviour
     }
 
     void finishUnderFeet(){
+        gameManager.PlaySuccess();
+
         PlayerMovement playerMovement = GetComponent<PlayerMovement>();
         playerMovement.enabled = false;
 

@@ -13,6 +13,9 @@ public class LevelData : ScriptableObject {
     [SerializeField] public Transform HintArrowPrefab;
     [SerializeField] public bool Enemies;
 
+    // Sound
+    [SerializeField] public AudioClip BackgroundClip;
+
     // Section settings
     [SerializeField] public Section SectionPrefab;
     [SerializeField] public Cell CellPrefab;

@@ -7,6 +7,7 @@ public class LevelDataInspector : Editor {
     SerializedProperty startNumber;
     SerializedProperty increment;
     SerializedProperty iterationCount;
+    SerializedProperty backgroundClip;
     SerializedProperty playerPrefab;
     SerializedProperty startPrefab;
     SerializedProperty finishPrefab;
@@ -31,6 +32,7 @@ public class LevelDataInspector : Editor {
         startNumber = serializedObject.FindProperty("StartNumber");
         increment = serializedObject.FindProperty("Increment");
         iterationCount = serializedObject.FindProperty("IterationCount");
+        backgroundClip = serializedObject.FindProperty("BackgroundClip");
         playerPrefab = serializedObject.FindProperty("PlayerPrefab");
         startPrefab = serializedObject.FindProperty("StartPrefab");
         finishPrefab = serializedObject.FindProperty("FinishPrefab");
@@ -72,6 +74,10 @@ public class LevelDataInspector : Editor {
         EditorGUILayout.ObjectField(backgroundPrefab, typeof(Transform));
         EditorGUILayout.ObjectField(hintArrowPrefab, typeof(Transform));
         EditorGUILayout.PropertyField(enemies);
+
+        EditorGUILayout.LabelField("Sound", headingStyle);
+        EditorGUILayout.Space(10);
+        EditorGUILayout.ObjectField(backgroundClip, typeof(AudioClip));
 
         EditorGUILayout.Space(10);
         EditorGUILayout.LabelField("Section", headingStyle);
