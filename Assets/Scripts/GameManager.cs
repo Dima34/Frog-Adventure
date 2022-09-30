@@ -77,6 +77,7 @@ public class GameManager : MonoBehaviour
         InitLevelManager();
         
         GlobalEventManager.OnCurrentNumberChange.AddListener(checkSectionsForActive);
+        GlobalEventManager.OnCurrentNumberChange.AddListener(checkHint);
         GlobalEventManager.OnCorrectCell.AddListener(nextSectionNumber);
         
         CreateGameSequence();
@@ -254,8 +255,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void checkHint(){
+        if(UIManager.LevelFromMenu){
+            LevelManager.SpawnHintArrow();
+            UIManager.LevelFromMenu = false;
+        } else{
+            LevelManager.HideHintArrow();
+        }
+    }
+
     public void ClearListeners(){
         GlobalEventManager.OnCurrentNumberChange.RemoveListener(checkSectionsForActive);
+        GlobalEventManager.OnCurrentNumberChange.RemoveListener(checkHint);
         GlobalEventManager.OnCorrectCell.RemoveListener(nextSectionNumber);
         LevelManager.ClearEventListeners();
         CameraMovement.ClearEventListeners();

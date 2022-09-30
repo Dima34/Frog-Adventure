@@ -8,6 +8,7 @@ public class LevelManager
     public Transform StartObject;
     public Transform FinishObject;
     public Transform BackgroundObject;
+    public Transform HintArrowObject;
     public List<Section> SpawnedSections { get => spawnedSections; }
     public Transform SpawnedPlayer { get => spawnedPlayer; }
     
@@ -21,6 +22,7 @@ public class LevelManager
     Transform finishPrefab;
     Transform backgroundPrefab;
     Section sectionPrefab;
+    Transform hintArrowPrefab;
     List<Section> spawnedSections;
     float sectionSideMarginSize;
     int cellInSectionAmount;
@@ -49,6 +51,7 @@ public class LevelManager
         finishPrefab = gameManager.FinishPrefab;
         backgroundPrefab = gameManager.BackgroundPrefab;
         sectionPrefab = gameManager.SectionPrefab;
+        hintArrowPrefab = gameManager.HintArrowPrefab;
         sectionSideMarginSize = gameManager.SectionSideMarginSize;
         cellInSectionAmount = gameManager.CellInSectionAmount;
         willCellsMove = gameManager.WillCellsMove;
@@ -65,9 +68,9 @@ public class LevelManager
     {
         DestroyLevel();
         
+        CreateBackground();
         CreatePlayer();
         CreateStartPlate();
-        CreateBackground();
         CreateSections(fromEditor);
         SpawnCells();
         CreateFinishPlate();
@@ -76,8 +79,8 @@ public class LevelManager
     public void DestroyLevel(){
         DestroySections();
         DestroyPlayer();
-        DestroyStartPlate();
         DestroyBackground();
+        DestroyStartPlate();
         DestroyFinishPlate();
         DestroyEnemies();
     }
@@ -116,7 +119,7 @@ public class LevelManager
 
     public void CreateFinishPlate()
     {
-        FinishObject = Object.Instantiate(finishPrefab, StartObject.transform.position + (levelDirection * propGaps * (iterationCount + 1)), StartObject.rotation);
+        FinishObject = Object.Instantiate(finishPrefab, parentObject.position + (levelDirection * propGaps * (iterationCount + 1)), parentObject.rotation);
         FinishObject.SetParent(parentObject, true);
     }
 
@@ -128,8 +131,8 @@ public class LevelManager
     }
 
     public void CreateBackground(){
-        Vector3 levelLength = StartObject.transform.position + (levelDirection * propGaps * (iterationCount + 1));
-        BackgroundObject = Object.Instantiate(backgroundPrefab, levelLength / 2, StartObject.rotation);
+        Vector3 levelLength = parentObject.position + (levelDirection * propGaps * (iterationCount + 1));
+        BackgroundObject = Object.Instantiate(backgroundPrefab, levelLength / 2, parentObject.rotation);
         
         SpriteRenderer spriteRenderer = BackgroundObject.GetComponent<SpriteRenderer>();
         spriteRenderer.size = new Vector2(spriteRenderer.size.x, levelLength.y / BackgroundObject.transform.localScale.y);
@@ -289,6 +292,29 @@ public class LevelManager
         }
 
         enemySpawner.ExistingEmenyList = new List<Enemy>();
+    }
+
+    public void SpawnHintArrow(){
+        for (int i = spawnedSections.Count - 1; i >= 0 ; i--)
+        {
+            if(spawnedSections[i].isActiveAndEnabled){
+                Debug.Log("enabled section with number " + i);
+                Cell correctCell = spawnedSections[i].CellsList[spawnedSections[i].CorrectCellIndex];
+
+                // 1.1 is a 10% specing
+                Vector3 arrowPosition = correctCell.transform.position + (correctCell.transform.up * 1.1f * correctCell.transform.lossyScale.y);
+                HintArrowObject = Object.Instantiate(hintArrowPrefab, arrowPosition, correctCell.transform.rotation);
+
+                break;
+            }
+        }
+    }
+
+    public void HideHintArrow(){
+        if(HintArrowObject){
+            Object.Destroy(HintArrowObject.gameObject);
+            HintArrowObject = null;
+        }
     }
 
     public void ClearEventListeners(){
