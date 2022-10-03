@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 461515f3f110db54f8f4fe038b72699f, type: 3}
-  m_Name: Level_1_1
+  m_Name: Level_2_2
   m_EditorClassIdentifier: 
-  StartNumber: 0
-  Increment: 1
+  StartNumber: 20
+  Increment: 2
   IterationCount: 10
   PlayerPrefab: {fileID: 8413168908945671572, guid: 020efcaab85c21349a74292909d7fcda, type: 3}
   StartPrefab: {fileID: 8840974579410243326, guid: 9244bcde49f7a2243a30c495705878be, type: 3}
@@ -27,7 +27,7 @@ MonoBehaviour:
   PropGaps: 15
   CellInSectionAmount: 3
   SectionSideMarginSize: 3.5
-  WillCellsMove: 1
+  WillCellsMove: 0
   CellMoveSpeed: 30
   EnemyPrefab: {fileID: 6593064610127327743, guid: 7e70530f09ef8fb46a161ec2bed1cb5a, type: 3}
   EnemyMovementSpeed: 10
