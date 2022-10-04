@@ -9,7 +9,7 @@ public class NumberMenu : MonoBehaviour
     [SerializeField] NumberButton _numberButtonPrefab;
     [SerializeField] GridLayoutGroup _buttonContainer;
 
-    LevelData[] allLevels;
+    List<LevelData> allLevels;
 
     private void Start()
     {
@@ -18,16 +18,16 @@ public class NumberMenu : MonoBehaviour
 
     void createSectionCards()
     {
-        allLevels = Resources.LoadAll<LevelData>("Levels");
+        allLevels = LevelUtils.GetLevels();
         
-        HashSet<int> sectionNameSet = new HashSet<int>();
+        HashSet<int> levelsBySection = new HashSet<int>();
 
-        for (int i = 0; i < allLevels.Length; i++)
+        for (int i = 0; i < allLevels.Count; i++)
         {
-            sectionNameSet.Add(LevelUtils.GetLevelInfoByName(allLevels[i].name)[0]);
+            levelsBySection.Add(LevelUtils.GetLevelInfoByName(allLevels[i].name)[0]);
         }
         
-        foreach (var nameNum in sectionNameSet)
+        foreach (var nameNum in levelsBySection)
         {
             NumberButton numButton = Instantiate(_numberButtonPrefab, new Vector3(), new Quaternion(), _buttonContainer.transform);
             numButton.SectionNumber = nameNum;

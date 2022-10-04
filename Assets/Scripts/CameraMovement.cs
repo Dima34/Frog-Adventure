@@ -68,7 +68,6 @@ public class CameraMovement : MonoBehaviour
 
         finishTop = finishObject.position - (-finishObject.up * (finishObject.localScale.y / 2));
         startBottom = startObject.position - (startObject.up * (startObject.localScale.y / 2));
-        Debug.Log(startBottom);
     }
 
     void setPlayerObject(Transform player){

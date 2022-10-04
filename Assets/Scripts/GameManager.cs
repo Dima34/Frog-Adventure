@@ -243,7 +243,8 @@ public class GameManager : MonoBehaviour
         int currentLevelNumber = LevelUtils.GetLevelInfoByName(LevelDataSO.name)[1];
         int currentLevelSection = LevelUtils.GetLevelInfoByName(LevelDataSO.name)[0];
 
-        List<LevelData> currentSectionLevels = LevelUtils.GetSectionLevels(currentLevelSection);
+        List<LevelData> allLevels = LevelUtils.GetLevels();
+        List<LevelData> currentSectionLevels = LevelUtils.GetSectionLevels(allLevels, currentLevelSection);
 
         if(LevelUtils.IsNextLevelExist(currentSectionLevels, currentLevelNumber))
         {

@@ -298,7 +298,6 @@ public class LevelManager
         for (int i = spawnedSections.Count - 1; i >= 0 ; i--)
         {
             if(spawnedSections[i].isActiveAndEnabled){
-                Debug.Log("enabled section with number " + i);
                 Cell correctCell = spawnedSections[i].CellsList[spawnedSections[i].CorrectCellIndex];
 
                 // 1.1 is a 10% specing

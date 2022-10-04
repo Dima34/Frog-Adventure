@@ -52,8 +52,6 @@ public class PlayerMovement : MonoBehaviour
         {
             
             if(EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null){
-                Debug.Log(EventSystem.current.IsPointerOverGameObject());
-                Debug.Log(EventSystem.current.currentSelectedGameObject);
                 return;
             }
 

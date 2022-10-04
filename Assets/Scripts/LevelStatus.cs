@@ -39,8 +39,14 @@ public static class LevelStatus
         if(!isLevelDataExist()){
             createDefaultData();
         }
+
+        LevelItemsData savedLevelData = getSavedLevelData();
+        if(savedLevelData.Data.Count != LevelUtils.GetLevels().Count){
+            createDefaultData();
+            savedLevelData = getSavedLevelData();
+        }
         
-        return getSavedLevelData();
+        return savedLevelData;
     }
 
     public static void createDefaultData(){

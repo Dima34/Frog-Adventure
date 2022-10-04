@@ -11,7 +11,6 @@ public static class LevelUtils
     public static List<int> GetLevelInfoByName(string name){
         string[] splittedName = name.Split("_");
         List<int> numArr = new List<int>();
-        int sectionNum;
 
         for (int i = 1; i < splittedName.Length; i++)
         {
@@ -35,8 +34,53 @@ public static class LevelUtils
         return Resources.Load<LevelData>("Levels/" + name);
     }
 
-    public static LevelData[] GetLevels(){
-        return Resources.LoadAll<LevelData>("Levels");
+    public static List<LevelData> GetLevels(){
+        List<LevelData> allLevels = getLevels();
+        List<LevelData> sortedLevels = new List<LevelData>();
+
+        // filter in right order
+        HashSet<int> levelsBySection = new HashSet<int>();
+
+        for (int i = 0; i < allLevels.Count; i++)
+        {
+            levelsBySection.Add(LevelUtils.GetLevelInfoByName(allLevels[i].name)[0]);
+        }
+        
+        foreach (var sectionNum in levelsBySection)
+        {
+            List<LevelData> currentSectionLevels = GetSectionLevels(allLevels, sectionNum);
+
+            while(true){
+                bool isChanged = false;
+
+                for (int i = 0; i < currentSectionLevels.Count - 1; i++)
+                {
+                    int levelNumber = LevelUtils.GetLevelInfoByName(currentSectionLevels[i].name)[1];
+                    int nextLevelNumber = LevelUtils.GetLevelInfoByName(currentSectionLevels[i+1].name)[1];
+
+                    if(levelNumber > nextLevelNumber){
+                        LevelData temp = currentSectionLevels[i];
+                        currentSectionLevels[i] = currentSectionLevels[i + 1];
+                        currentSectionLevels[i + 1] = temp;
+                        isChanged = true;
+                    }
+                }
+
+                if(isChanged){
+                    isChanged = false;
+                } else
+                {
+                    break;
+                }
+            }
+
+            foreach (var level in currentSectionLevels)
+            {
+                sortedLevels.Add(level);
+            }
+        }
+
+        return sortedLevels;
     }
 
     public static LevelData GetNextLevel(List<LevelData> levelsInSection, int currentLevelNumber){
@@ -52,11 +96,22 @@ public static class LevelUtils
         return null;
     }
 
+    static List<LevelData> getLevels(){
+        LevelData[] levelData = Resources.LoadAll<LevelData>("Levels");
+        List<LevelData> levelDataList = new List<LevelData>();
+
+        for (int i = 0; i < levelData.Length; i++)
+        {
+            levelDataList.Add(levelData[i]);
+        }
+
+        return levelDataList;
+    }
+
     // Collect all levels with same section
-    public static List<LevelData> GetSectionLevels(int sectionNumber){
+    public static List<LevelData> GetSectionLevels(List<LevelData> levels,int sectionNumber){
         List<LevelData> currentSectionLevels = new List<LevelData>();
 
-        LevelData[] levels = GetLevels();
         foreach (var level in levels)
         {
             int levelSection = LevelUtils.GetLevelInfoByName(level.name)[0];

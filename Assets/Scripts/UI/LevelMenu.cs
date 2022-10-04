@@ -10,7 +10,6 @@ public class LevelMenu : MonoBehaviour
 
     void Start()
     {
-        LevelStatus.GetData();
         createLevelButtons();    
     }
     
