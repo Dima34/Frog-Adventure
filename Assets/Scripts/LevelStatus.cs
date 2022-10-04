@@ -6,7 +6,7 @@ using System;
 
 public static class LevelStatus
 {
-    static string fileName = "Data.json";
+    static string fileName = "LevelData.json";
 
     public static void writeAsDefault(){
         List<LevelItem> defaultLevelItemList = new List<LevelItem>();
