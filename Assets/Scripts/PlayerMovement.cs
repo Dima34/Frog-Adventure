@@ -30,15 +30,30 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnEnable() {
         GlobalEventManager.OnCorrectCell.AddListener(addCellFollow);
+        GlobalEventManager.OnCorrectCell.AddListener(magnetToCenter);
     }
 
     private void OnDisable() {
         GlobalEventManager.OnCorrectCell.RemoveListener(addCellFollow);
+        GlobalEventManager.OnCorrectCell.RemoveListener(magnetToCenter);
     }
 
     private void OnTriggerExit2D(Collider2D collidedObj)
     {
         removeCellFollow(collidedObj);
+    }
+
+    void magnetToCenter(Collider2D cell){
+        StartCoroutine(magnetToCenterProcess(cell));
+    }
+
+    IEnumerator magnetToCenterProcess(Collider2D cell){
+        float t = 0;
+        while(t < 1){
+            transform.position = Vector3.Lerp(transform.position, cell.transform.position, t);
+            t+=Time.deltaTime;
+            yield return null;
+        }
     }
 
     void Update()
