@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 461515f3f110db54f8f4fe038b72699f, type: 3}
   m_Name: Level_10_7
   m_EditorClassIdentifier: 
-  StartNumber: 540
-  Increment: 9
+  StartNumber: 600
+  Increment: 10
   IterationCount: 10
   PlayerPrefab: {fileID: 8413168908945671572, guid: 020efcaab85c21349a74292909d7fcda, type: 3}
   StartPrefab: {fileID: 8840974579410243326, guid: 9244bcde49f7a2243a30c495705878be, type: 3}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level_10_1
   m_EditorClassIdentifier: 
   StartNumber: 0
-  Increment: 9
+  Increment: 10
   IterationCount: 10
   PlayerPrefab: {fileID: 8413168908945671572, guid: 020efcaab85c21349a74292909d7fcda, type: 3}
   StartPrefab: {fileID: 8840974579410243326, guid: 9244bcde49f7a2243a30c495705878be, type: 3}
