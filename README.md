@@ -1,5 +1,3 @@
 # Frog Adventure
-Children's counting game to learn math 
-
-## Final Result
+Children's counting game to learn math
 <img src = "gameplay.gif"> </img>
